@@ -1,3 +1,4 @@
+import Footer from "@/components/footer/Footer";
 import "./globals.css";
 
 export const metadata = {
@@ -8,8 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`bg-white text-amazon-text flex flex-col min-h-screen`}>
+      <body className="text-amazon-text flex flex-col min-h-screen">
         {children}
+        <Footer />
       </body>
     </html>
   );

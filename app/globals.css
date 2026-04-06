@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
-:root {
-  --color-background: #ffffff;
-  --color-light: #232f3e;
-  --color-default: #131921;
-  --color-text: #111111;
-  --color-blue: #0066c0;
-  --color-orange: #c7511f;
-  --color-yellow: #ffd814;
-  --color-yellow-hover: #f7ca00;
-  --color-secondary: #ffa41c;
+@theme {
+  --color-amazon-background: #ffffff;
+  --color-amazon-light: #232f3e;
+  --color-amazon-default: #131921;
+  --color-amazon-text: #111111;
+  --color-amazon-blue: #0066c0;
+  --color-amazon-orange: #c7511f;
+  --color-amazon-yellow: #ffd814;
+  --color-amazon-yellow-hover: #f7ca00;
+  --color-amazon-secondary: #ffa41c;
 }
 
 body {
