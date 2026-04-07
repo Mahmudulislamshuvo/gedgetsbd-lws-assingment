@@ -6,7 +6,7 @@ import React from "react";
 
 const Login = () => {
   return (
-    <div className="flex-1 bg-white flex flex-col items-center pt-8 w-full">
+    <div className="flex-1 bg-white flex flex-col items-center pt-8">
       <Logo />
       <LoginCard />
       <Divider />
