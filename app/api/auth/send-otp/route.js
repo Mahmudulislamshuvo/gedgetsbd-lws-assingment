@@ -51,8 +51,8 @@ export async function POST(request) {
       role: role,
     });
 
-    const savedUserInfoIntoOtp = await createTemporaryUser.save();
     const sendingOtp = await sendOTP(email, otpCodeGen);
+    const savedUserInfoIntoOtp = await createTemporaryUser.save();
 
     if (!savedUserInfoIntoOtp && !sendingOtp) {
       return NextResponse.json(

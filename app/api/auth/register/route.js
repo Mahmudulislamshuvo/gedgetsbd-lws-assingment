@@ -1,8 +1,6 @@
 import User from "@/Models/userSchema";
 import { NextResponse } from "next/server";
-import bcript from "bcrypt";
 import { dbConnect } from "@/lib/dbConnect";
-import { encryption } from "@/lib/encription";
 
 export async function POST(request) {
   try {
@@ -12,7 +10,7 @@ export async function POST(request) {
 
     if (!email || !password) {
       return new NextResponse(
-        JSON.stringify({ error: "Email and password are required" }),
+        JSON.stringify({ error: "All fields are required" }),
         { status: 400 },
       );
     }
