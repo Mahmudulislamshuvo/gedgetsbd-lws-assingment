@@ -1,4 +1,6 @@
-const OtpSchema = new Schema({
+import mongoose, { Schema } from "mongoose";
+
+const OtpSchema = Schema({
   email: { type: String, required: true },
   code: { type: String, required: true },
   name: String,

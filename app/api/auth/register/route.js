@@ -2,10 +2,10 @@ import User from "@/Models/userSchema";
 import { NextResponse } from "next/server";
 import bcript from "bcrypt";
 import { dbConnect } from "@/lib/dbConnect";
+import { encryption } from "@/lib/encription";
 
 export async function POST(request) {
   try {
-    const otpCodeGen = Math.floor(100000 + Math.random() * 900000).toString();
     const { email, password, role } = await request.json();
 
     await dbConnect();
@@ -27,9 +27,6 @@ export async function POST(request) {
       );
     }
 
-    const hashPassword = await bcript.hash(password, 10);
-
-    console.log(hashPassword);
     return;
 
     // // Create new user
