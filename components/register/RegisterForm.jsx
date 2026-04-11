@@ -1,6 +1,5 @@
 "use client";
 
-import { sendOtpEmail } from "@/actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -17,16 +16,33 @@ const RegisterForm = () => {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const result = await sendOtpEmail(formData);
+      const password = formData.get("password")?.toString() || "";
+      const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
 
-      if (result?.success && result?.email) {
-        router.push(
-          `/register/verify?email=${encodeURIComponent(result.email)}`,
-        );
+      if (password !== passwordConfirm) {
+        setSubmitError("Password and confirm password do not match.");
         return;
       }
 
-      setSubmitError(result?.error || "OTP send failed. Try again.");
+      const payload = {
+        email: formData.get("email")?.toString() || "",
+        password,
+        role: formData.get("role")?.toString() || "user",
+        name: formData.get("name")?.toString() || "",
+        mobile: formData.get("mobile")?.toString() || "",
+        countryCode: formData.get("countryCode")?.toString() || "",
+        shopName: formData.get("shopName")?.toString() || "",
+      };
+
+      if (!payload.email || !payload.password) {
+        setSubmitError("Email and password are required.");
+        return;
+      }
+
+      sessionStorage.setItem("pending_registration", JSON.stringify(payload));
+      router.push(
+        `/register/verify?email=${encodeURIComponent(payload.email)}`,
+      );
     } catch (error) {
       setSubmitError("Something went wrong. Please try again.");
     } finally {

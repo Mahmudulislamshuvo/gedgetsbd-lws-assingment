@@ -32,6 +32,7 @@ export async function POST(request) {
     if (createUser) {
       return NextResponse.json({
         success: true,
+        data: createUser,
         message: "Registration successful",
       });
     }

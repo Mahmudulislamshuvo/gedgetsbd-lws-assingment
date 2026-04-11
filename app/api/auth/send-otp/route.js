@@ -63,7 +63,10 @@ export async function POST(request) {
     }
 
     return new NextResponse(
-      JSON.stringify({ message: "OTP sent to your email" }),
+      JSON.stringify({
+        message: "OTP sent to your email",
+        data: savedUserInfoIntoOtp,
+      }),
       { status: 200 },
     );
   } catch (error) {

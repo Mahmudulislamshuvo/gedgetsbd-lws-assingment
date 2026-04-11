@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Info, Mail, X, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const VerifyOTPModal = () => {
   const searchParams = useSearchParams();
@@ -15,9 +15,83 @@ const VerifyOTPModal = () => {
 
   const [otp, setOtp] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(true);
+  const [otpSendError, setOtpSendError] = useState("");
+  const [hasOtpSent, setHasOtpSent] = useState(false);
+
+  const sendOtpFromPendingRegistration = async (forceResend = false) => {
+    if (!email) {
+      setIsSendingOtp(false);
+      setOtpSendError("Email not found in URL.");
+      return;
+    }
+
+    const sentKey = `otp_sent_${email}`;
+    const alreadySent = sessionStorage.getItem(sentKey);
+
+    if (alreadySent && !forceResend) {
+      setHasOtpSent(true);
+      setIsSendingOtp(false);
+      return;
+    }
+
+    const pendingRaw = sessionStorage.getItem("pending_registration");
+
+    if (!pendingRaw) {
+      setIsSendingOtp(false);
+      setOtpSendError("Registration session not found. Please register again.");
+      return;
+    }
+
+    try {
+      setIsSendingOtp(true);
+      setOtpSendError("");
+
+      const payload = JSON.parse(pendingRaw);
+
+      if (!payload?.email || payload.email !== email) {
+        setOtpSendError("Email mismatch. Please register again.");
+        return;
+      }
+
+      const response = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result?.error === "OTP already sent to your email") {
+          sessionStorage.setItem(sentKey, "1");
+          setHasOtpSent(true);
+          return;
+        }
+
+        setOtpSendError(result?.error || "Failed to send OTP.");
+        return;
+      }
+
+      sessionStorage.setItem(sentKey, "1");
+      setHasOtpSent(true);
+    } catch (error) {
+      setOtpSendError("Failed to send OTP. Check your connection and retry.");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  useEffect(() => {
+    sendOtpFromPendingRegistration();
+  }, [email]);
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    if (!hasOtpSent) return;
+
     setIsPending(true);
 
     try {
@@ -34,14 +108,18 @@ const VerifyOTPModal = () => {
 
       console.log(result);
 
-      if (response.success === true) {
+      if (result.success === true) {
+        sessionStorage.removeItem(`otp_sent_${email}`);
+        sessionStorage.removeItem("pending_registration");
         router.push("/login");
-      } else {
-        setIsPending(false);
-        alert(result?.error || "Verification failed. Please try again.");
+        return;
       }
+
+      console.log(result?.error || "OTP verification failed");
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -73,6 +151,14 @@ const VerifyOTPModal = () => {
             <span className="font-semibold text-gray-900 break-all">
               {email}
             </span>
+          </p>
+
+          <p className="text-xs mt-3 text-gray-600">
+            {isSendingOtp
+              ? "Sending OTP..."
+              : hasOtpSent
+                ? "OTP sent. Please check your email."
+                : otpSendError || "OTP status unknown."}
           </p>
         </div>
 
@@ -107,7 +193,9 @@ const VerifyOTPModal = () => {
 
           <button
             type="submit"
-            disabled={isPending || otp.length < 6}
+            disabled={
+              isPending || isSendingOtp || !hasOtpSent || otp.length < 6
+            }
             className="w-full bg-[#FFD814] hover:bg-[#F7CA00] disabled:bg-gray-200 disabled:cursor-not-allowed py-3 rounded-lg text-sm font-bold text-gray-900 transition-all shadow-sm flex items-center justify-center gap-2"
           >
             {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -121,9 +209,11 @@ const VerifyOTPModal = () => {
             Didn't receive the code?{" "}
             <button
               type="button"
+              onClick={() => sendOtpFromPendingRegistration(true)}
+              disabled={isSendingOtp}
               className="text-sm text-blue-600 hover:text-blue-800 font-bold hover:underline transition-all"
             >
-              Resend OTP
+              {isSendingOtp ? "Sending..." : "Resend OTP"}
             </button>
           </p>
         </div>
