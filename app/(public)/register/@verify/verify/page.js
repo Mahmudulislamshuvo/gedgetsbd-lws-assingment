@@ -18,6 +18,7 @@ const VerifyOTPModal = () => {
   const [isSendingOtp, setIsSendingOtp] = useState(true);
   const [otpSendError, setOtpSendError] = useState("");
   const [hasOtpSent, setHasOtpSent] = useState(false);
+  const [verifyError, setVerifyError] = useState("");
 
   const sendOtpFromPendingRegistration = async (forceResend = false) => {
     if (!email) {
@@ -27,9 +28,11 @@ const VerifyOTPModal = () => {
     }
 
     const sentKey = `otp_sent_${email}`;
+    const sendingKey = `otp_sending_${email}`;
     const alreadySent = sessionStorage.getItem(sentKey);
+    const isSending = sessionStorage.getItem(sendingKey);
 
-    if (alreadySent && !forceResend) {
+    if ((alreadySent || isSending) && !forceResend) {
       setHasOtpSent(true);
       setIsSendingOtp(false);
       return;
@@ -46,6 +49,7 @@ const VerifyOTPModal = () => {
     try {
       setIsSendingOtp(true);
       setOtpSendError("");
+      sessionStorage.setItem(sendingKey, "1");
 
       const payload = JSON.parse(pendingRaw);
 
@@ -80,6 +84,7 @@ const VerifyOTPModal = () => {
     } catch (error) {
       setOtpSendError("Failed to send OTP. Check your connection and retry.");
     } finally {
+      sessionStorage.removeItem(sendingKey);
       setIsSendingOtp(false);
     }
   };
@@ -106,7 +111,10 @@ const VerifyOTPModal = () => {
 
       const result = await response.json();
 
-      console.log(result);
+      if (result?.error) {
+        setVerifyError(result.error);
+        return;
+      }
 
       if (result.success === true) {
         sessionStorage.removeItem(`otp_sent_${email}`);
@@ -182,6 +190,11 @@ const VerifyOTPModal = () => {
               disabled={isPending}
               className="w-full px-4 py-4 border-2 border-gray-200 rounded-lg text-center text-3xl font-mono font-bold tracking-[12px] focus:border-yellow-500 focus:ring-4 focus:ring-yellow-100 outline-none transition-all placeholder:text-gray-200 disabled:bg-gray-50 disabled:text-gray-400"
             />
+            {verifyError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-md text-center border border-red-200 animate-in slide-in-from-top-2">
+                {verifyError}
+              </div>
+            )}
             <div className="flex items-start gap-2 pt-2">
               <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
               <p className="text-[11px] text-gray-500 leading-normal">

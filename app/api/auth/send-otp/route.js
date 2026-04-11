@@ -30,9 +30,31 @@ export async function POST(request) {
       );
     }
 
-    const existingOtp = await Otp.findOne({ email });
+    const passwordProtection = encryption(password);
+    const hashPassword = await bcrypt.hash(passwordProtection, 5);
 
-    if (existingOtp) {
+    const upsertResult = await Otp.findOneAndUpdate(
+      { email },
+      {
+        $setOnInsert: {
+          email,
+          code: otpCodeGen,
+          name,
+          password: hashPassword,
+          role: role,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+        rawResult: true,
+      },
+    );
+
+    const savedUserInfoIntoOtp = upsertResult?.value;
+    const alreadyExisted = upsertResult?.lastErrorObject?.updatedExisting;
+
+    if (alreadyExisted) {
       return new NextResponse(
         JSON.stringify({
           error: "OTP already sent to your email",
@@ -41,24 +63,20 @@ export async function POST(request) {
       );
     }
 
-    const passwordProtection = encryption(password);
-    const hashPassword = await bcrypt.hash(passwordProtection, 5);
-
-    const createTemporaryUser = new Otp({
-      email,
-      code: otpCodeGen,
-      name,
-      password: hashPassword,
-      role: role,
-    });
-
-    await sendOTP(email, otpCodeGen);
-    const savedUserInfoIntoOtp = await createTemporaryUser.save();
-
     if (!savedUserInfoIntoOtp) {
       return NextResponse.json(
         { error: "Failed to process request" },
         { status: 400 },
+      );
+    }
+
+    try {
+      await sendOTP(email, otpCodeGen);
+    } catch (mailError) {
+      await Otp.deleteOne({ _id: savedUserInfoIntoOtp._id });
+      return NextResponse.json(
+        { error: "Failed to send OTP email" },
+        { status: 500 },
       );
     }
 
