@@ -22,6 +22,16 @@ const UserSchema = new Schema({
   phone: {
     type: String,
   },
+  image: {
+    type: String,
+  },
+  shopName: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
