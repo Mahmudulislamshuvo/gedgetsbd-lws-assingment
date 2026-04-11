@@ -1,4 +1,4 @@
-import bcript from "bcrypt";
+import bcrypt from "bcrypt";
 import { dbConnect } from "@/lib/dbConnect";
 import { encryption } from "@/lib/encription";
 import Otp from "@/Models/otpSchema";
@@ -10,7 +10,7 @@ export async function POST(request) {
   try {
     const otpCodeGen = Math.floor(100000 + Math.random() * 900000).toString();
     await dbConnect();
-    const { email, password, role } = await request.json();
+    const { email, password, role, name } = await request.json();
 
     if (!email || !password) {
       return new NextResponse(
@@ -42,33 +42,30 @@ export async function POST(request) {
     }
 
     const passwordProtection = encryption(password);
-    const hashPassword = await bcript.hash(passwordProtection, 5);
+    const hashPassword = await bcrypt.hash(passwordProtection, 5);
 
     const createTemporaryUser = new Otp({
       email,
       code: otpCodeGen,
+      name,
       password: hashPassword,
       role: role,
     });
 
-    // temorary disabeled
+    await sendOTP(email, otpCodeGen);
+    const savedUserInfoIntoOtp = await createTemporaryUser.save();
 
-    // const sendingOtp = await sendOTP(email, otpCodeGen);
-    // const savedUserInfoIntoOtp = await createTemporaryUser.save();
+    if (!savedUserInfoIntoOtp) {
+      return NextResponse.json(
+        { error: "Failed to process request" },
+        { status: 400 },
+      );
+    }
 
-    // if (!savedUserInfoIntoOtp && !sendingOtp) {
-    //   return NextResponse.json(
-    //     { error: "Failed to process request" },
-    //     { status: 400 },
-    //   );
-    // }
-    //
     return new NextResponse(
       JSON.stringify({ message: "OTP sent to your email" }),
       { status: 200 },
     );
-
-    //
   } catch (error) {
     console.error(error);
     return NextResponse.json(

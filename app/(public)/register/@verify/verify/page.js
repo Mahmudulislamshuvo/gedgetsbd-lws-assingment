@@ -1,5 +1,119 @@
-const OtpVerificationPage = () => {
-  return <div>OtpVerificationPage</div>;
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { Info, Mail, X, Loader2 } from "lucide-react";
+import { useState } from "react";
+
+const VerifyOTPModal = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Read email from query string: /register/verify?email=...
+  const email = searchParams.get("email")
+    ? decodeURIComponent(searchParams.get("email"))
+    : "";
+
+  const [otp, setOtp] = useState("");
+  const [isPending, setIsPending] = useState(false);
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setIsPending(true);
+
+    console.log("Submitting OTP:", otp);
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsPending(false);
+      // Logic for verification goes here
+    }, 2000);
+  };
+
+  return (
+    // Full-screen overlay with blur effect
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+      {/* Modal Container */}
+      <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-2xl relative animate-in fade-in zoom-in-95 duration-300">
+        {/* Close Button */}
+        <button
+          onClick={() => router.back()}
+          className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
+          aria-label="Close modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <div className="mx-auto bg-blue-50 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 border border-blue-100">
+            <Mail className="w-8 h-8 text-blue-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Verify Your Email
+          </h2>
+          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+            We've sent a 6-digit verification code to:
+            <br />
+            <span className="font-semibold text-gray-900 break-all">
+              {email}
+            </span>
+          </p>
+        </div>
+
+        {/* Form Section */}
+        <form onSubmit={handleVerify} className="space-y-6">
+          <div className="space-y-2">
+            <label
+              htmlFor="otp"
+              className="block text-sm font-bold text-gray-700 text-center"
+            >
+              Enter 6-Digit OTP
+            </label>
+            <input
+              type="text"
+              id="otp"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} // Numbers only
+              placeholder="000000"
+              maxLength={6}
+              required
+              disabled={isPending}
+              className="w-full px-4 py-4 border-2 border-gray-200 rounded-lg text-center text-3xl font-mono font-bold tracking-[12px] focus:border-yellow-500 focus:ring-4 focus:ring-yellow-100 outline-none transition-all placeholder:text-gray-200 disabled:bg-gray-50 disabled:text-gray-400"
+            />
+            <div className="flex items-start gap-2 pt-2">
+              <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+              <p className="text-[11px] text-gray-500 leading-normal">
+                This code is valid for 5 minutes. Please do not share this code
+                with anyone for security reasons.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isPending || otp.length < 6}
+            className="w-full bg-[#FFD814] hover:bg-[#F7CA00] disabled:bg-gray-200 disabled:cursor-not-allowed py-3 rounded-lg text-sm font-bold text-gray-900 transition-all shadow-sm flex items-center justify-center gap-2"
+          >
+            {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+            {isPending ? "Verifying..." : "Verify and Create Account"}
+          </button>
+        </form>
+
+        {/* Footer Section */}
+        <div className="mt-8 text-center border-t border-gray-100 pt-6">
+          <p className="text-sm text-gray-600">
+            Didn't receive the code?{" "}
+            <button
+              type="button"
+              className="text-sm text-blue-600 hover:text-blue-800 font-bold hover:underline transition-all"
+            >
+              Resend OTP
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default OtpVerificationPage;
+export default VerifyOTPModal;

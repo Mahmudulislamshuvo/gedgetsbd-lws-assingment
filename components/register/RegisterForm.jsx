@@ -1,14 +1,42 @@
 "use client";
 
 import { sendOtpEmail } from "@/actions";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const RegisterForm = () => {
   const [isShopOwner, setIsShopOwner] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await sendOtpEmail(formData);
+
+      if (result?.success && result?.email) {
+        router.push(
+          `/register/verify?email=${encodeURIComponent(result.email)}`,
+        );
+        return;
+      }
+
+      setSubmitError(result?.error || "OTP send failed. Try again.");
+    } catch (error) {
+      setSubmitError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
-      <form action={sendOtpEmail} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Account Type Toggle */}
         <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-sm">
           <button
@@ -129,10 +157,17 @@ const RegisterForm = () => {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full py-1.5 bg-yellow-400 hover:bg-yellow-500 text-sm font-medium rounded-sm cursor-pointer"
         >
-          Create your Gadgets BD account
+          {isSubmitting ? "Submitting..." : "Create your Gadgets BD account"}
         </button>
+
+        {submitError ? (
+          <p className="text-sm text-red-600" role="alert">
+            {submitError}
+          </p>
+        ) : null}
       </form>
     </div>
   );

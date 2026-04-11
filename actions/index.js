@@ -1,34 +1,71 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 const sendOtpEmail = async (formData) => {
+  console.log("clicked on register");
+  const email = formData.get("email");
+
   try {
-    const email = formData.get("email");
     const role = formData.get("role");
     const password = formData.get("password");
+    const name = formData.get("name");
+    const mobile = formData.get("mobile");
+    const countryCode = formData.get("countryCode");
+    const shopName = formData.get("shopName");
 
-    const response = await fetch(`${process.env.BASE_URL}/api/auth/send-otp`, {
+    const requestHeaders = await headers();
+    const host = requestHeaders.get("host");
+    const protocol = requestHeaders.get("x-forwarded-proto") || "http";
+    const origin = process.env.BASE_URL || `${protocol}://${host}`;
+
+    const response = await fetch(`${origin}/api/auth/send-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, role }),
+      body: JSON.stringify({
+        email,
+        password,
+        role,
+        name,
+        mobile,
+        countryCode,
+        shopName,
+      }),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      console.error("API Error Send OTP:", result.error);
-      return;
+      // If OTP was already generated recently, user can continue to verify screen.
+      if (result?.error === "OTP already sent to your email") {
+        return {
+          success: true,
+          email,
+        };
+      }
+
+      console.error("API Error Send OTP:", result.error || result);
+      return {
+        success: false,
+        error: result?.error || "Failed to send OTP",
+      };
     }
+
+    return {
+      success: true,
+      email,
+    };
   } catch (error) {
     console.log("Server Action Error:", error);
-    return;
+    return {
+      success: false,
+      error: "Server action failed",
+    };
   }
-
-  const userEmail = formData.get("email");
-  redirect(`/register/verify?email=${encodeURIComponent(userEmail)}`);
 };
 
-export { sendOtpEmail };
+const registrationAction = async () => {};
+
+export { sendOtpEmail, registrationAction };
