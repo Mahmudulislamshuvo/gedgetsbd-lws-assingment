@@ -1,46 +1,44 @@
 import User from "@/Models/userSchema";
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
+import Otp from "@/Models/otpSchema";
 
 export async function POST(request) {
   try {
-    const { email, password, role } = await request.json();
-
     await dbConnect();
+    const { email, otp } = await request.json();
+    const findUser = await Otp.findOne({ email });
 
-    if (!email || !password) {
+    if (!findUser) {
       return new NextResponse(
-        JSON.stringify({ error: "All fields are required" }),
+        JSON.stringify({ error: "OTP expired or invalid" }),
         { status: 400 },
       );
     }
 
-    // If user is already registered
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return new NextResponse(
-        JSON.stringify({ error: "User already registered" }),
-        { status: 400 },
-      );
+    if (findUser.code !== otp) {
+      return new NextResponse(JSON.stringify({ error: "Invalid OTP" }), {
+        status: 400,
+      });
     }
 
-    return;
+    const createUser = await User.create({
+      email: findUser.email,
+      password: findUser.password,
+      name: findUser.name,
+      role: findUser.role,
+    });
 
-    // // Create new user
-    // const createUser = new User({
-    //   email,
-    //   password,
-    //   role: role,
-    // });
-
-    // await createUser.save();
-
-    // return new NextResponse(
-    //   JSON.stringify({ message: "User registered successfully" }),
-    //   { status: 201 },
-    // );
+    if (createUser) {
+      return NextResponse.json({
+        success: true,
+        message: "Registration successful",
+      });
+    }
   } catch (error) {
-    console.log(error);
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to complete registration", error }),
+      { status: 500 },
+    );
   }
 }

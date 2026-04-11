@@ -66,6 +66,23 @@ const sendOtpEmail = async (formData) => {
   }
 };
 
-const registrationAction = async () => {};
+// const registrationAction = async (formData) => {
+//   const email = formData.get("email");
+//   const otp = formData.get("otp");
 
-export { sendOtpEmail, registrationAction };
+//   try {
+//     const createUser = await fetch("/api/auth/register", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ email, otp }),
+//     });
+//     const result = await createUser.json();
+//     return result;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export { sendOtpEmail };

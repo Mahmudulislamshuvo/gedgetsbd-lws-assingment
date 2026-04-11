@@ -20,13 +20,29 @@ const VerifyOTPModal = () => {
     e.preventDefault();
     setIsPending(true);
 
-    console.log("Submitting OTP:", otp);
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsPending(false);
-      // Logic for verification goes here
-    }, 2000);
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const result = await response.json();
+
+      console.log(result);
+
+      if (response.success === true) {
+        router.push("/login");
+      } else {
+        setIsPending(false);
+        alert(result?.error || "Verification failed. Please try again.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -73,7 +89,7 @@ const VerifyOTPModal = () => {
               type="text"
               id="otp"
               value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} // Numbers only
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
               placeholder="000000"
               maxLength={6}
               required
