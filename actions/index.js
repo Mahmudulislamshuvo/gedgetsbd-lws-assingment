@@ -1,5 +1,6 @@
 "use server";
 
+import axios from "axios";
 import { headers } from "next/headers";
 
 const sendOtpEmail = async (formData) => {
@@ -66,23 +67,4 @@ const sendOtpEmail = async (formData) => {
   }
 };
 
-// const registrationAction = async (formData) => {
-//   const email = formData.get("email");
-//   const otp = formData.get("otp");
-
-//   try {
-//     const createUser = await fetch("/api/auth/register", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ email, otp }),
-//     });
-//     const result = await createUser.json();
-//     return result;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-export { sendOtpEmail };
+export { sendOtpEmail, login };

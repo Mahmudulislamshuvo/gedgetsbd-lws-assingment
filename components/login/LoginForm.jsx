@@ -1,19 +1,38 @@
 "use client";
 
+import axios from "axios";
+import { useState } from "react";
+
 const LoginForm = () => {
-  const submitLoginForm = (e) => {
-    e.preventDefault();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
+  const handleLoginSubmit = async (event) => {
+    setIsLoading(true);
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
 
-    console.log(data);
-    // {email: 'luhuzyqyq@mailinator.com', password: 'Pa$$w0rd!'}
+    try {
+      const response = await axios.post("/api/auth/login", { email, password });
+      console.log("Login successful:", response.data);
+      if (response?.data?.success === true) {
+        if (response?.data?.user?.role === "user") {
+          window.location.href = "/";
+        } else {
+          window.location.href = "/dashboard";
+        }
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     // <form action={submitLoginForm} className="space-y-4">
-    <form onSubmit={submitLoginForm} className="space-y-4">
+    <form onSubmit={handleLoginSubmit} className="space-y-4">
       <div>
         <label htmlFor="email" className="block text-sm font-bold mb-1">
           Email or mobile phone number
@@ -51,8 +70,9 @@ const LoginForm = () => {
       <button
         type="submit"
         className="w-full py-1.5 a-button-primary text-sm font-medium rounded-sm cursor-pointer"
+        disabled={isLoading}
       >
-        Sign in
+        {isLoading ? "Signing in..." : "Sign in"}
       </button>
     </form>
   );
