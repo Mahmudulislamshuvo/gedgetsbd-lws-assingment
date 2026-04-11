@@ -51,15 +51,17 @@ export async function POST(request) {
       role: role,
     });
 
-    const sendingOtp = await sendOTP(email, otpCodeGen);
-    const savedUserInfoIntoOtp = await createTemporaryUser.save();
+    // temorary disabeled
 
-    if (!savedUserInfoIntoOtp && !sendingOtp) {
-      return NextResponse.json(
-        { error: "Failed to process request" },
-        { status: 400 },
-      );
-    }
+    // const sendingOtp = await sendOTP(email, otpCodeGen);
+    // const savedUserInfoIntoOtp = await createTemporaryUser.save();
+
+    // if (!savedUserInfoIntoOtp && !sendingOtp) {
+    //   return NextResponse.json(
+    //     { error: "Failed to process request" },
+    //     { status: 400 },
+    //   );
+    // }
     //
     return new NextResponse(
       JSON.stringify({ message: "OTP sent to your email" }),
