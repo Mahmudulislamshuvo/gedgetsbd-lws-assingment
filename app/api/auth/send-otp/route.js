@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { dbConnect } from "@/lib/dbConnect";
-import { encryption } from "@/lib/encription";
 import Otp from "@/Models/otpSchema";
 import { sendOTP } from "@/lib/nodemailer";
 import User from "@/Models/userSchema";
@@ -30,8 +29,7 @@ export async function POST(request) {
       );
     }
 
-    const passwordProtection = encryption(password);
-    const hashPassword = await bcrypt.hash(passwordProtection, 5);
+    const hashPassword = await bcrypt.hash(password, 5);
 
     const upsertResult = await Otp.findOneAndUpdate(
       { email },
