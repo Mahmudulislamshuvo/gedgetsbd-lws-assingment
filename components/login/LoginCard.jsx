@@ -7,10 +7,6 @@ const LoginCard = () => {
     <div className="w-full max-w-[350px] p-6 a-box mb-6">
       <h1 className="text-2xl font-normal mb-4">Sign in</h1>
 
-      <div className="pb-5">
-        <SocialButtons />
-      </div>
-
       <LoginForm />
 
       <div className="mt-4 text-xs">

@@ -1,10 +1,13 @@
 import { dbConnect } from "@/lib/dbConnect";
 import User from "@/Models/userSchema";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 // incomplete need to complete it
 
 export async function POST(request) {
+  const randomPassword = Math.random().toString(36).slice(-8);
   try {
     await dbConnect();
     const { email, name, image, role } = await request.json();
@@ -16,16 +19,22 @@ export async function POST(request) {
 
     const user = existingUser
       ? existingUser
-      : await User.create({ email, name, image, role });
+      : await User.create({
+          email,
+          name,
+          image,
+          role,
+          password: `${randomPassword} socialLogin`,
+        });
 
     const accessToken = jwt.sign(
-      { email, role },
+      { email: user.email, role: user.role, id: user._id },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1d" },
     );
 
     const refreshToken = jwt.sign(
-      { email, role },
+      { email: user.email, role: user.role, id: user._id },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" },
     );

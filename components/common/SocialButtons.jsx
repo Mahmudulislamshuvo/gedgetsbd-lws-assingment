@@ -1,9 +1,11 @@
+"use client";
+
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export default function SocialButtons() {
+export default function SocialButtons({ isShopOwner }) {
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
@@ -15,6 +17,7 @@ export default function SocialButtons() {
         email: user.email,
         name: user.displayName,
         image: user.photoURL,
+        role: isShopOwner ? "shopOwner" : "user",
       });
 
       if (response.data.success) {

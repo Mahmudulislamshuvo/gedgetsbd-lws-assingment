@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import SocialButtons from "../common/SocialButtons";
 
 const RegisterForm = () => {
   const [isShopOwner, setIsShopOwner] = useState(false);
@@ -54,6 +55,9 @@ const RegisterForm = () => {
     <div className="flex flex-col gap-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Account Type Toggle */}
+        <div className="pb-5">
+          <SocialButtons isShopOwner={isShopOwner} />
+        </div>
         <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-sm">
           <button
             type="button"
