@@ -1,6 +1,6 @@
 const Divider = () => {
   return (
-    <div className="w-full max-w-[350px] mb-4">
+    <div className="w-full max-w-sm mb-4">
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300"></div>

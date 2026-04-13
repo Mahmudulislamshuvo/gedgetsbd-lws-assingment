@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SocialButtons from "../common/SocialButtons";
+import { signIn } from "next-auth/react";
 
 const RegisterForm = () => {
   const [isShopOwner, setIsShopOwner] = useState(false);
@@ -28,10 +29,8 @@ const RegisterForm = () => {
       const payload = {
         email: formData.get("email")?.toString() || "",
         password,
-        role: formData.get("role")?.toString() || "user",
+        userType: formData.get("userType")?.toString() || "customer",
         name: formData.get("name")?.toString() || "",
-        mobile: formData.get("mobile")?.toString() || "",
-        countryCode: formData.get("countryCode")?.toString() || "",
         shopName: formData.get("shopName")?.toString() || "",
       };
 
@@ -40,11 +39,34 @@ const RegisterForm = () => {
         return;
       }
 
-      sessionStorage.setItem("pending_registration", JSON.stringify(payload));
-      router.push(
-        `/register/verify?email=${encodeURIComponent(payload.email)}`,
-      );
-    } catch (error) {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setSubmitError(result?.message || "Registration failed.");
+        return;
+      }
+
+      const loginResult = await signIn("credentials", {
+        email: payload.email,
+        password: payload.password,
+        redirect: false,
+      });
+
+      if (loginResult?.error) {
+        router.push("/login");
+        return;
+      }
+
+      router.push("/profile");
+      router.refresh();
+    } catch {
       setSubmitError("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -76,8 +98,8 @@ const RegisterForm = () => {
 
           <input
             type="hidden"
-            name="role"
-            value={isShopOwner ? "shopOwner" : "user"}
+            name="userType"
+            value={isShopOwner ? "shopOwner" : "customer"}
           />
         </div>
 
@@ -109,28 +131,6 @@ const RegisterForm = () => {
             />
           </div>
         )}
-
-        <div>
-          <label htmlFor="mobile" className="block text-sm font-bold mb-1">
-            Mobile number
-          </label>
-          <div className="flex gap-2">
-            <select
-              name="countryCode"
-              className="px-2 py-1.5 border border-gray-400 rounded-sm outline-none focus:ring-1 focus:ring-amazon-secondary focus:border-amazon-secondary"
-            >
-              <option value="+880">BD +880</option>
-            </select>
-            <input
-              type="tel"
-              name="mobile"
-              id="mobile"
-              required
-              placeholder="Mobile number"
-              className="flex-1 px-2 py-1.5 border border-gray-400 rounded-sm outline-none focus:ring-1 focus:ring-amazon-secondary focus:border-amazon-secondary"
-            />
-          </div>
-        </div>
 
         <div>
           <label htmlFor="email" className="block text-sm font-bold mb-1">

@@ -1,30 +1,47 @@
 "use client";
 
-import axios from "axios";
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const handleLoginSubmit = async (event) => {
-    setIsLoading(true);
     event.preventDefault();
+    setIsLoading(true);
+    setError("");
+
     const formData = new FormData(event.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
     try {
-      const response = await axios.post("/api/auth/login", { email, password });
-      console.log("Login successful:", response.data);
-      if (response?.data?.success === true) {
-        if (response?.data?.user?.role === "user") {
-          window.location.href = "/";
-        } else {
-          window.location.href = "/dashboard";
-        }
+      const nextPath = searchParams.get("next");
+      const safeNextPath =
+        nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//")
+          ? nextPath
+          : "/profile";
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("ইমেইল বা পাসওয়ার্ড ভুল হয়েছে।");
+        return;
       }
-    } catch (error) {
-      console.error("Login failed:", error);
+
+      router.push(safeNextPath);
+      router.refresh();
+    } catch {
+      setError("লগইন করতে সমস্যা হচ্ছে, আবার চেষ্টা করো।");
     } finally {
       setIsLoading(false);
     }
@@ -51,12 +68,12 @@ const LoginForm = () => {
           <label htmlFor="password" className="text-sm font-bold">
             Password
           </label>
-          <a
-            href="#"
+          <Link
+            href="/forgot-password"
             className="text-sm text-amazon-blue hover:text-amazon-orange hover:underline"
           >
             Forgot your password?
-          </a>
+          </Link>
         </div>
         <input
           type="password"
@@ -74,6 +91,8 @@ const LoginForm = () => {
       >
         {isLoading ? "Signing in..." : "Sign in"}
       </button>
+
+      {error ? <p className="text-sm text-red-600">{error}</p> : null}
     </form>
   );
 };

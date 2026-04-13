@@ -1,44 +1,80 @@
-import User from "@/Models/userSchema";
-import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
-import Otp from "@/Models/otpSchema";
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
+import User from "@/Models/userSchema";
+import Shop from "@/Models/shopSchema";
+
+const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
+  userType: z.enum(["customer", "shopOwner"]),
+  shopName: z.string().optional(),
+});
 
 export async function POST(request) {
   try {
     await dbConnect();
-    const { email, otp } = await request.json();
-    const findUser = await Otp.findOne({ email });
+    const body = await request.json();
+    const parsed = registerSchema.safeParse(body);
 
-    if (!findUser) {
-      return new NextResponse(
-        JSON.stringify({ error: "OTP expired or invalid" }),
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Validation failed",
+          errors: parsed.error.flatten(),
+        },
         { status: 400 },
       );
     }
 
-    if (findUser.code !== otp) {
-      return new NextResponse(JSON.stringify({ error: "Invalid OTP" }), {
-        status: 400,
-      });
+    const { name, email, password, userType, shopName } = parsed.data;
+    const normalizedEmail = email.toLowerCase();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, message: "User already exists" },
+        { status: 409 },
+      );
     }
 
-    const createUser = await User.create({
-      email: findUser.email,
-      password: findUser.password,
-      name: findUser.name,
-      role: findUser.role,
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await User.create({
+      name,
+      email: normalizedEmail,
+      password: hashedPassword,
+      userType,
     });
 
-    if (createUser) {
-      return NextResponse.json({
-        success: true,
-        data: createUser,
-        message: "Registration successful",
+    if (userType === "shopOwner") {
+      const shop = await Shop.create({
+        name: shopName || `${name}'s Shop`,
+        ownerId: user._id,
       });
+      user.shopId = shop._id;
+      await user.save();
     }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Registration successful",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          userType: user.userType,
+          shopId: user.shopId,
+        },
+      },
+      { status: 201 },
+    );
   } catch (error) {
-    return new NextResponse(
-      JSON.stringify({ error: "Failed to complete registration", error }),
+    return NextResponse.json(
+      { success: false, message: "Failed to complete registration" },
       { status: 500 },
     );
   }

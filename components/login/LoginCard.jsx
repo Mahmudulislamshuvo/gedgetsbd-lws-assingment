@@ -1,13 +1,22 @@
 import { ChevronRight } from "lucide-react";
 import LoginForm from "./LoginForm";
 import SocialButtons from "../common/SocialButtons";
+import { Suspense } from "react";
 
 const LoginCard = () => {
   return (
-    <div className="w-full max-w-[350px] p-6 a-box mb-6">
+    <div className="w-full max-w-sm p-6 a-box mb-6">
       <h1 className="text-2xl font-normal mb-4">Sign in</h1>
 
-      <LoginForm />
+      <Suspense
+        fallback={<div className="text-sm text-gray-500">Loading...</div>}
+      >
+        <LoginForm />
+      </Suspense>
+
+      <div className="mt-4">
+        <SocialButtons isShopOwner={false} />
+      </div>
 
       <div className="mt-4 text-xs">
         <p>
