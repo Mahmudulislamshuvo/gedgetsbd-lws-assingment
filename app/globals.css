@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-amazon-background: #ffffff;
   --color-amazon-light: #232f3e;
   --color-amazon-default: #131921;
