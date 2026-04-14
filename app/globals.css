@@ -1,31 +1,87 @@
 @import "tailwindcss";
 
-:root {
-  --color-amazon-background: #ffffff;
+@theme {
+  /* Amazon কালার প্যালেট */
+  --color-amazon: #131921;
+  --color-amazon-background: #f0f2f2;
   --color-amazon-light: #232f3e;
   --color-amazon-default: #131921;
   --color-amazon-text: #111111;
-  --color-amazon-blue: #0066c0;
+  --color-amazon-blue: #007185;
   --color-amazon-orange: #c7511f;
   --color-amazon-yellow: #ffd814;
   --color-amazon-yellow-hover: #f7ca00;
   --color-amazon-secondary: #ffa41c;
+  --color-amazon-secondary-hover: #fa8900;
+
+  /* ফন্ট সেটআপ */
+  --font-sans: "Arial", "sans-serif";
 }
 
-body {
-  font-family: Arial, sans-serif;
+/* Base Styles */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    @apply bg-amazon-background text-amazon-text;
+  }
 }
-/* ------login--------- */
-.a-box {
-  border: 1px solid #ddd;
-  border-radius: 4px;
+
+/* Custom Components Styles */
+@layer components {
+  /* Tab active state */
+  .tab-active {
+    border-bottom: 2px solid var(--color-amazon-orange);
+    color: var(--color-amazon-orange);
+  }
+
+  /* Box Styles (আপনার দেওয়া ২ রকম বক্স) */
+  .a-box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+  }
+
+  /* Button Styles (আপনার দেওয়া ২ রকম বাটন) */
+  .a-button-primary {
+    background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+    border: 1px solid #a88734;
+    border-color: #a88734 #9c7e31 #846a29;
+  }
+
+  .a-button-primary:hover {
+    background: linear-gradient(to bottom, #f5d78e, #eeb933);
+  }
+
+  .btn-primary {
+    background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+    border: 1px solid #a88734;
+    border-color: #a88734 #9c7e31 #846a29;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to bottom, #f5d78e, #eeb933);
+  }
+
+  /* Checkout layout styles */
+  .checkout-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  /* Star Rating Color */
+  .star-rating {
+    color: var(--color-amazon-secondary);
+  }
 }
-.a-button-primary {
-  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
-  border: 1px solid #a88734;
-  border-color: #a88734 #9c7e31 #846a29;
-}
-.a-button-primary:hover {
-  background: linear-gradient(to bottom, #f5d78e, #eeb933);
-}
-/* ------login End--------- */

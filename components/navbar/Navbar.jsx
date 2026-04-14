@@ -1,10 +1,9 @@
 import { auth } from "@/lib/auth";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 const Navbar = async () => {
   const session = await auth();
-
-  console.log(session);
 
   return (
     <nav className="bg-amazon text-white">
@@ -32,7 +31,7 @@ const Navbar = async () => {
           <input
             type="text"
             placeholder="Search Gadgets, Laptops, Phones..."
-            className="flex-1 px-3 text-black outline-none"
+            className="flex-1 px-3 text-black outline-none bg-white"
           />
           <button className="bg-amazon-secondary hover:bg-[#fa8900] px-4 flex items-center justify-center">
             <i data-lucide="search" className="text-black w-5 h-5"></i>
@@ -79,7 +78,7 @@ const Navbar = async () => {
             href="/cart"
             className="flex items-end hover:outline-1 hover:outline-white rounded-sm p-1 cursor-pointer relative"
           >
-            <i data-lucide="shopping-cart" className="w-8 h-8"></i>
+            <ShoppingCart className="w-8 h-8" />
             <span className="font-bold text-amazon-secondary absolute top-0 left-1/2 -translate-x-1/2 text-sm">
               3
             </span>
