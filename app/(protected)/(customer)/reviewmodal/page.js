@@ -2,7 +2,7 @@ import React from "react";
 
 const ReviewModal = () => {
   return (
-    <div class="max-w-[1000px] mx-auto w-full p-6">
+    <div class="max-w-250 mx-auto w-full p-6">
       <div class="flex flex-col gap-8">
         <h1 class="text-3xl font-normal">Create Review</h1>
 

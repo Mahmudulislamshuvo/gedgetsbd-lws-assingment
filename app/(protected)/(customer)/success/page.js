@@ -2,10 +2,10 @@ import React from "react";
 
 const OrderSuccess = () => {
   return (
-    <div class="max-w-[800px] mx-auto w-full p-8 py-12">
+    <div class="max-w-200 mx-auto w-full p-8 py-12">
       <div class="flex items-start gap-4 p-6 border border-gray-300 rounded shadow-sm">
         <div class="bg-white border border-green-600 rounded-full p-1 self-start mt-1">
-          <i data-lucide="check" class="w-6 h-6 text-green-600 stroke-[3]"></i>
+          <i data-lucide="check" class="w-6 h-6 text-green-600 stroke-3"></i>
         </div>
         <div class="space-y-4 flex-1">
           <h1 class="text-xl font-bold text-green-700">

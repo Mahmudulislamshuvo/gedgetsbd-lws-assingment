@@ -1,6 +1,6 @@
 import React from "react";
 
-const ShopProfilePage = () => {
+const ShopProfile = () => {
   return (
     <div class="max-w-[1200px] mx-auto w-full p-6">
       <div class="mb-8 flex justify-between items-end">
@@ -401,4 +401,4 @@ const ShopProfilePage = () => {
   );
 };
 
-export default ShopProfilePage;
+export default ShopProfile;

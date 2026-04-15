@@ -35,7 +35,7 @@ const PaymentPage = () => {
             <div class="box p-4 space-y-4">
               {/* <!-- Product 1 --> */}
               <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center flex-shrink-0">
+                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1675868374786-3edd36dddf04?w=300"
                     class="h-full object-cover"
@@ -66,7 +66,7 @@ const PaymentPage = () => {
 
               {/* <!-- Product 2 --> */}
               <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center flex-shrink-0">
+                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200"
                     class="h-full object-cover"
@@ -95,7 +95,7 @@ const PaymentPage = () => {
 
               {/* <!-- Product 3 --> */}
               <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center flex-shrink-0">
+                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=300"
                     class="h-full w-full object-cover"
@@ -138,7 +138,7 @@ const PaymentPage = () => {
               class="box p-6 space-y-6 shadow-sm"
             >
               <div class="space-y-4">
-                <label class="flex items-start gap-3 p-3 border border-gray-300 rounded-md cursor-pointer hover:bg-amazon-background transition-colors bg-gray-50 border-amazon-orange ring-1 ring-amazon-orange">
+                <label class="flex items-start gap-3 p-3 border  rounded-md cursor-pointer hover:bg-amazon-background transition-colors bg-gray-50 border-amazon-orange ring-1 ring-amazon-orange">
                   <div>
                     <span class="font-bold block text-sm">
                       Credit or Debit Card
@@ -170,7 +170,7 @@ const PaymentPage = () => {
                     />
                   </div>
                   <div class="flex flex-wrap gap-4">
-                    <div class="flex-1 min-w-[200px]">
+                    <div class="flex-1 min-w-50">
                       <label class="text-xs font-bold block mb-1">
                         Card number
                       </label>
@@ -227,7 +227,7 @@ const PaymentPage = () => {
         </div>
 
         {/* <!-- Right Side: Order Summary --> */}
-        <div class="w-full lg:w-[300px]">
+        <div class="w-full lg:w-75">
           <div class="box p-4 sticky top-10">
             <button
               onclick="

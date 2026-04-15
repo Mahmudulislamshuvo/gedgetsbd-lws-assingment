@@ -2,7 +2,7 @@ import React from "react";
 
 const ProductPage = () => {
   return (
-    <div class="flex-1 max-w-[1500px] mx-auto w-full p-4">
+    <div class="flex-1 max-w-375 mx-auto w-full p-4">
       {/* <!-- Results Header --> */}
       <div class="flex justify-between items-center mb-4 shadow-sm border-b pb-2">
         <div class="text-sm">
@@ -23,7 +23,7 @@ const ProductPage = () => {
 
       <div class="flex gap-6">
         {/* <!-- Sidebar Filters --> */}
-        <div class="w-64 hidden lg:block flex-shrink-0 border-r pr-4">
+        <div class="w-64 hidden lg:block shrink-0 border-r pr-4">
           {/* <!-- Category --> */}
           <div class="mb-6">
             <h3 class="font-bold text-base mb-3">Category</h3>
@@ -257,7 +257,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1675868374786-3edd36dddf04?w=300"
                   class="h-full object-cover mix-blend-multiply"
@@ -295,7 +295,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=300"
                   class="h-full object-cover mix-blend-multiply"
@@ -333,7 +333,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"
                   class="h-full object-cover mix-blend-multiply"
@@ -371,7 +371,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=300"
                   class="h-full object-cover mix-blend-multiply"
@@ -408,7 +408,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=300"
                   class="h-full object-cover mix-blend-multiply"
@@ -446,7 +446,7 @@ const ProductPage = () => {
               href="details.html"
               class="flex gap-4 p-4 border rounded hover:shadow-md transition"
             >
-              <div class="w-48 h-48 flex-shrink-0 bg-gray-50 flex items-center justify-center">
+              <div class="w-48 h-48 shrink-0 bg-gray-50 flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1527690710675-4ae7d334803b?w=300"
                   class="h-full object-cover mix-blend-multiply"
