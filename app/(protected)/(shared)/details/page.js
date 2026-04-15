@@ -1,5 +1,6 @@
 import RelatedProduct from "@/components/details/RelatedProduct";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const page = () => {
@@ -7,18 +8,18 @@ const page = () => {
     <main class="flex-1 max-w-375 mx-auto w-full p-4">
       {/* <!-- Breadcrumbs --> */}
       <div class="text-xs text-gray-500 mb-4 flex items-center gap-1">
-        <a href="index.html" class="hover:underline">
+        <Link href="index.html" class="hover:underline">
           Home
-        </a>
+        </Link>
         <ChevronRight class="w-3 h-3" />
-        <a href="products.html" class="hover:underline">
+        <Link href="products.html" class="hover:underline">
           Electronics
-        </a>
+        </Link>
 
         <ChevronRight class="w-3 h-3" />
-        <a href="products.html" class="hover:underline">
+        <Link href="products.html" class="hover:underline">
           Laptops & Computers
-        </a>
+        </Link>
         <ChevronRight class="w-3 h-3" />
         <span class="text-amazon-text font-bold">MacBook Pro</span>
       </div>
@@ -61,9 +62,9 @@ const page = () => {
           </h1>
           <p class="text-sm text-gray-600 mb-3">
             Visit the
-            <a href="shops.html" class="text-amazon-blue hover:underline">
+            <Link href="shops.html" class="text-amazon-blue hover:underline">
               Apple Store
-            </a>
+            </Link>
           </p>
 
           <div class="flex items-center gap-2 mb-4">

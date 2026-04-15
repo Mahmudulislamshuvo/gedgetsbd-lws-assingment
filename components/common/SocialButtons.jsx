@@ -15,7 +15,9 @@ export default function SocialButtons({ isShopOwner }) {
         }),
       });
 
-      await signIn("google", { callbackUrl: "/profile" });
+      await signIn("google", {
+        callbackUrl: isShopOwner ? "/managelist" : "/profile",
+      });
     } catch (error) {
       console.error("Google Login Error:", error);
     }

@@ -22,10 +22,8 @@ const LoginForm = () => {
 
     try {
       const nextPath = searchParams.get("next");
-      const safeNextPath =
-        nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//")
-          ? nextPath
-          : "/profile";
+      const hasSafeNextPath =
+        nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//");
 
       const result = await signIn("credentials", {
         email,
@@ -38,7 +36,18 @@ const LoginForm = () => {
         return;
       }
 
-      router.push(safeNextPath);
+      if (hasSafeNextPath) {
+        router.push(nextPath);
+        router.refresh();
+        return;
+      }
+
+      const sessionResponse = await fetch("/api/auth/session");
+      const session = await sessionResponse.json();
+      const fallbackPath =
+        session?.user?.userType === "shopOwner" ? "/managelist" : "/profile";
+
+      router.push(fallbackPath);
       router.refresh();
     } catch {
       setError("লগইন করতে সমস্যা হচ্ছে, আবার চেষ্টা করো।");

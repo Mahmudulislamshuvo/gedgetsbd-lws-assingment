@@ -8,8 +8,8 @@ export default function UnauthorizedPage() {
         <p className="text-sm text-gray-600">
           You do not have permission to access this page.
         </p>
-        <Link href="/profile" className="text-amazon-blue hover:underline">
-          Back to profile
+        <Link href="/" className="text-amazon-blue hover:underline">
+          Go to home
         </Link>
       </div>
     </div>

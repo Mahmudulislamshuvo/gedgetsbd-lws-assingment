@@ -64,7 +64,7 @@ const RegisterForm = () => {
         return;
       }
 
-      router.push("/profile");
+      router.push(isShopOwner ? "/managelist" : "/profile");
       router.refresh();
     } catch {
       setSubmitError("Something went wrong. Please try again.");

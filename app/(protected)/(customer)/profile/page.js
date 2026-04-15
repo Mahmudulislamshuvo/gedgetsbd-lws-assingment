@@ -28,7 +28,7 @@ const ProfilePage = async () => {
         </p>
 
         {session.user.userType === "shopOwner" ? (
-          <Link className="text-amazon-blue hover:underline" href="/shop-owner">
+          <Link className="text-amazon-blue hover:underline" href="/managelist">
             Go to shop owner area
           </Link>
         ) : null}
