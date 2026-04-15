@@ -32,7 +32,7 @@ const LoginForm = () => {
       });
 
       if (result?.error) {
-        setError("ইমেইল বা পাসওয়ার্ড ভুল হয়েছে।");
+        setError("your email or password is incorrect");
         return;
       }
 
@@ -50,7 +50,7 @@ const LoginForm = () => {
       router.push(fallbackPath);
       router.refresh();
     } catch {
-      setError("লগইন করতে সমস্যা হচ্ছে, আবার চেষ্টা করো।");
+      setError("There was an error logging in. Please try again.");
     } finally {
       setIsLoading(false);
     }

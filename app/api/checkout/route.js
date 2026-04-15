@@ -7,6 +7,8 @@ export async function GET() {
     return auth.response;
   }
 
+  console.log(auth);
+
   return NextResponse.json(
     {
       success: true,
