@@ -33,7 +33,7 @@ const Navbar = async () => {
             placeholder="Search Gadgets, Laptops, Phones..."
             className="flex-1 px-3 text-black outline-none bg-white"
           />
-          <button className="bg-amazon-secondary hover:bg-[#fa8900] px-4 flex items-center justify-center">
+          <button className="bg-amazon-secondary hover:bg-amazon-secondary-hover px-4 flex items-center justify-center">
             <i data-lucide="search" className="text-black w-5 h-5"></i>
           </button>
         </div>

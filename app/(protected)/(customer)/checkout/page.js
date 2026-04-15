@@ -1,60 +1,60 @@
 const PaymentPage = () => {
   return (
     <>
-      <div class="checkout-container flex-1 py-10 px-4 flex flex-col lg:flex-row gap-8">
+      <div className="checkout-container flex-1 py-10 px-4 flex flex-col lg:flex-row gap-8">
         {/* <!-- Left Side: Steps --> */}
-        <div class="flex-1 space-y-6">
+        <div className="flex-1 space-y-6">
           {/* <!-- 1. Shipping Address Summary --> */}
-          <div class="hover:bg-gray-50 border-b border-gray-300 pb-6 flex justify-between items-start transition-colors cursor-pointer">
+          <div className="hover:bg-gray-50 border-b border-gray-300 pb-6 flex justify-between items-start transition-colors cursor-pointer">
             <div>
-              <span class="section-number mr-4">1</span>
-              <span class="font-bold text-lg">Shipping address</span>
+              <span className="section-number mr-4">1</span>
+              <span className="font-bold text-lg">Shipping address</span>
             </div>
-            <div class="text-sm flex-1 ml-10">
+            <div className="text-sm flex-1 ml-10">
               <p>John Doe</p>
               <p>123 Main St, Apartment 4B</p>
               <p>Dhaka, 1212</p>
               <p>Bangladesh</p>
-              <p class="mt-1 text-gray-600">Phone: +880 1712-345678</p>
+              <p className="mt-1 text-gray-600">Phone: +880 1712-345678</p>
             </div>
             <a
               href="#"
-              class="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
+              className="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
             >
               Change
             </a>
           </div>
 
           {/* <!-- 2. Selected Products List --> */}
-          <div class="pb-6 border-b border-gray-300">
-            <div class="flex items-center mb-4">
-              <span class="section-number mr-4">2</span>
-              <span class="font-bold text-lg">Review items</span>
+          <div className="pb-6 border-b border-gray-300">
+            <div className="flex items-center mb-4">
+              <span className="section-number mr-4">2</span>
+              <span className="font-bold text-lg">Review items</span>
             </div>
 
-            <div class="box p-4 space-y-4">
+            <div className="box p-4 space-y-4">
               {/* <!-- Product 1 --> */}
-              <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
+              <div className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
+                <div className="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1675868374786-3edd36dddf04?w=300"
-                    class="h-full object-cover"
+                    className="h-full object-cover"
                   />
                 </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-medium mb-1">
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium mb-1">
                     Apple MacBook Pro 16" M2 Max - 32GB RAM, 1TB SSD
                   </h3>
-                  <p class="text-xs text-gray-600 mb-2">
+                  <p className="text-xs text-gray-600 mb-2">
                     Sold by: Official Apple Store
                   </p>
-                  <div class="flex items-center gap-4">
-                    <p class="text-sm font-bold text-amazon-orange">
+                  <div className="flex items-center gap-4">
+                    <p className="text-sm font-bold text-amazon-orange">
                       ৳3,45,000
                     </p>
-                    <div class="flex items-center gap-2 text-xs">
+                    <div className="flex items-center gap-2 text-xs">
                       <span>Qty:</span>
-                      <select class="border border-gray-300 rounded px-2 py-0.5">
+                      <select className="border border-gray-300 rounded px-2 py-0.5">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -65,25 +65,27 @@ const PaymentPage = () => {
               </div>
 
               {/* <!-- Product 2 --> */}
-              <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
+              <div className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
+                <div className="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200"
-                    class="h-full object-cover"
+                    className="h-full object-cover"
                   />
                 </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-medium mb-1">
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium mb-1">
                     Sony WH-1000XM5 Wireless Noise Canceling Headphones
                   </h3>
-                  <p class="text-xs text-gray-600 mb-2">
+                  <p className="text-xs text-gray-600 mb-2">
                     Sold by: Sony Official
                   </p>
-                  <div class="flex items-center gap-4">
-                    <p class="text-sm font-bold text-amazon-orange">৳38,500</p>
-                    <div class="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-4">
+                    <p className="text-sm font-bold text-amazon-orange">
+                      ৳38,500
+                    </p>
+                    <div className="flex items-center gap-2 text-xs">
                       <span>Qty:</span>
-                      <select class="border border-gray-300 rounded px-2 py-0.5">
+                      <select className="border border-gray-300 rounded px-2 py-0.5">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -94,23 +96,27 @@ const PaymentPage = () => {
               </div>
 
               {/* <!-- Product 3 --> */}
-              <div class="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                <div class="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
+              <div className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
+                <div className="w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=300"
-                    class="h-full w-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-medium mb-1">
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium mb-1">
                     Razer BlackWidow V4 Pro Mechanical Gaming Keyboard
                   </h3>
-                  <p class="text-xs text-gray-600 mb-2">Sold by: Razer Store</p>
-                  <div class="flex items-center gap-4">
-                    <p class="text-sm font-bold text-amazon-orange">৳18,500</p>
-                    <div class="flex items-center gap-2 text-xs">
+                  <p className="text-xs text-gray-600 mb-2">
+                    Sold by: Razer Store
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <p className="text-sm font-bold text-amazon-orange">
+                      ৳18,500
+                    </p>
+                    <div className="flex items-center gap-2 text-xs">
                       <span>Qty:</span>
-                      <select class="border border-gray-300 rounded px-2 py-0.5">
+                      <select className="border border-gray-300 rounded px-2 py-0.5">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -123,10 +129,10 @@ const PaymentPage = () => {
           </div>
 
           {/* <!-- 3. Payment Method --> */}
-          <div class="pb-6">
-            <div class="flex items-center mb-6">
-              <span class="section-number mr-4">3</span>
-              <span class="font-bold text-lg text-amazon-orange">
+          <div className="pb-6">
+            <div className="flex items-center mb-6">
+              <span className="section-number mr-4">3</span>
+              <span className="font-bold text-lg text-amazon-orange">
                 Choose a payment method
               </span>
             </div>
@@ -135,66 +141,68 @@ const PaymentPage = () => {
               action="success.html"
               method="POST"
               id="paymentForm"
-              class="box p-6 space-y-6 shadow-sm"
+              className="box p-6 space-y-6 shadow-sm"
             >
-              <div class="space-y-4">
-                <label class="flex items-start gap-3 p-3 border  rounded-md cursor-pointer hover:bg-amazon-background transition-colors bg-gray-50 border-amazon-orange ring-1 ring-amazon-orange">
+              <div className="space-y-4">
+                <label className="flex items-start gap-3 p-3 border  rounded-md cursor-pointer hover:bg-amazon-background transition-colors bg-gray-50 border-amazon-orange ring-1 ring-amazon-orange">
                   <div>
-                    <span class="font-bold block text-sm">
+                    <span className="font-bold block text-sm">
                       Credit or Debit Card
                     </span>
-                    <div class="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-2">
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-                        class="h-4"
+                        className="h-4"
                         alt="Visa"
                       />
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-                        class="h-4"
+                        className="h-4"
                         alt="Mastercard"
                       />
                     </div>
                   </div>
                 </label>
 
-                <div id="cardInputs" class="pl-8 space-y-4">
+                <div id="cardInputs" className="pl-8 space-y-4">
                   <div>
-                    <label class="text-xs font-bold block mb-1">
+                    <label className="text-xs font-bold block mb-1">
                       Name on card
                     </label>
                     <input
                       type="text"
                       placeholder="John Doe"
-                      class="w-full max-w-sm px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
+                      className="w-full max-w-sm px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
                     />
                   </div>
-                  <div class="flex flex-wrap gap-4">
-                    <div class="flex-1 min-w-50">
-                      <label class="text-xs font-bold block mb-1">
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex-1 min-w-50">
+                      <label className="text-xs font-bold block mb-1">
                         Card number
                       </label>
                       <input
                         type="text"
                         placeholder="#### #### #### ####"
-                        class="w-full px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
+                        className="w-full px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
                       />
                     </div>
-                    <div class="w-24">
-                      <label class="text-xs font-bold block mb-1">CVV</label>
+                    <div className="w-24">
+                      <label className="text-xs font-bold block mb-1">
+                        CVV
+                      </label>
                       <input
                         type="password"
                         placeholder="***"
-                        class="w-full px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
+                        className="w-full px-2 py-1 border border-gray-400 rounded-sm text-sm outline-none focus:ring-1 focus:ring-amazon-blue"
                       />
                     </div>
                   </div>
                   <div>
-                    <label class="text-xs font-bold block mb-1">
+                    <label className="text-xs font-bold block mb-1">
                       Expiration date
                     </label>
-                    <div class="flex gap-2">
-                      <select class="bg-gray-100 border border-gray-300 rounded p-1 text-xs">
+                    <div className="flex gap-2">
+                      <select className="bg-gray-100 border border-gray-300 rounded p-1 text-xs">
                         <option>01</option>
                         <option>02</option>
                         <option>03</option>
@@ -208,7 +216,7 @@ const PaymentPage = () => {
                         <option>11</option>
                         <option>12</option>
                       </select>
-                      <select class="bg-gray-100 border border-gray-300 rounded p-1 text-xs">
+                      <select className="bg-gray-100 border border-gray-300 rounded p-1 text-xs">
                         <option>2025</option>
                         <option>2026</option>
                         <option>2027</option>
@@ -220,68 +228,71 @@ const PaymentPage = () => {
                   </div>
                 </div>
 
-                <div class="h-px bg-gray-200"></div>
+                <div className="h-px bg-gray-200"></div>
               </div>
             </form>
           </div>
         </div>
 
         {/* <!-- Right Side: Order Summary --> */}
-        <div class="w-full lg:w-75">
-          <div class="box p-4 sticky top-10">
+        <div className="w-full lg:w-75">
+          <div className="box p-4 sticky top-10">
             <button
               onclick="
                             document.getElementById('paymentForm').submit()
                         "
-              class="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
+              className="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
             >
               Place your order
             </button>
-            <p class="text-[10px] text-gray-500 text-center mb-4 border-b border-gray-300 pb-4 leading-tight">
+            <p className="text-[10px] text-gray-500 text-center mb-4 border-b border-gray-300 pb-4 leading-tight">
               By placing your order, you agree to Gadgets BD's
               <a
                 href="#"
-                class="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
+                className="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
               >
                 privacy notice
               </a>
               and
               <a
                 href="#"
-                class="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
+                className="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
               >
                 conditions of use
               </a>
               .
             </p>
 
-            <h3 class="font-bold text-lg mb-4">Order Summary</h3>
-            <div class="space-y-2 text-xs text-gray-600">
-              <div class="flex justify-between">
+            <h3 className="font-bold text-lg mb-4">Order Summary</h3>
+            <div className="space-y-2 text-xs text-gray-600">
+              <div className="flex justify-between">
                 <span>Items (3):</span>
                 <span>৳4,02,000</span>
               </div>
-              <div class="flex justify-between">
+              <div className="flex justify-between">
                 <span>Delivery Fee:</span>
-                <span class="text-green-600 font-bold">FREE</span>
+                <span className="text-green-600 font-bold">FREE</span>
               </div>
-              <div class="flex justify-between border-b border-gray-200 pb-2">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span>Service Fee:</span>
                 <span>৳500</span>
               </div>
-              <div class="flex justify-between text-amazon-orange text-lg font-bold pt-2">
+              <div className="flex justify-between text-amazon-orange text-lg font-bold pt-2">
                 <span>Order Total:</span>
                 <span>৳4,02,500</span>
               </div>
             </div>
 
-            <div class="mt-4 pt-4 border-t border-gray-200 text-xs">
-              <p class="text-green-600 font-bold mb-2">
-                <i data-lucide="truck" class="w-4 h-4 inline mr-1"></i>
+            <div className="mt-4 pt-4 border-t border-gray-200 text-xs">
+              <p className="text-green-600 font-bold mb-2">
+                <i data-lucide="truck" className="w-4 h-4 inline mr-1"></i>
                 FREE Delivery on orders over ৳50,000
               </p>
-              <p class="text-gray-600">
-                <i data-lucide="shield-check" class="w-4 h-4 inline mr-1"></i>
+              <p className="text-gray-600">
+                <i
+                  data-lucide="shield-check"
+                  className="w-4 h-4 inline mr-1"
+                ></i>
                 Secure checkout
               </p>
             </div>

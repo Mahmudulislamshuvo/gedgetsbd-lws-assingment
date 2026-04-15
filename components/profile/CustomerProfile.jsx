@@ -1,8 +1,6 @@
-import React from "react";
-
 const CustomerProfile = () => {
   return (
-    <div className="max-w-[1200px] mx-auto w-full p-6">
+    <div className="max-w-300 mx-auto w-full p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-normal">Customer Profile</h1>
         <p className="text-sm text-gray-600">

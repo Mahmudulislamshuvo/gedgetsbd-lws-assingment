@@ -1,7 +1,7 @@
 const CartItems = ({ item }) => {
   return (
     <div className="p-4 border-b border-gray-300 flex gap-4 hover:bg-gray-50">
-      <div className="w-32 h-32 flex-shrink-0">
+      <div className="w-32 h-32 shrink-0">
         <img
           src={item?.image}
           className="w-full h-full object-cover rounded border border-gray-200"
