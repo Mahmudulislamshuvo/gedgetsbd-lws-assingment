@@ -14,6 +14,27 @@ const UserSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    phone: {
+      type: String,
+      default: null,
+    },
+    address: {
+      village: {
+        type: String,
+        default: null,
+        trim: true,
+      },
+      upazila: {
+        type: String,
+        default: null,
+        trim: true,
+      },
+      district: {
+        type: String,
+        default: null,
+        trim: true,
+      },
+    },
     password: {
       type: String,
       default: null,

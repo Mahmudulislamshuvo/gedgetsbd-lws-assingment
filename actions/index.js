@@ -3,7 +3,7 @@
 import { dbConnect } from "@/lib/dbConnect";
 import User from "@/Models/userSchema";
 
-export async function getProfileData(userId, userType) {
+export async function getProfileData(userId) {
   try {
     await dbConnect();
 
@@ -21,26 +21,10 @@ export async function getProfileData(userId, userType) {
       updatedAt: user.updatedAt?.toISOString(),
     };
 
-    // userType অনুযায়ী আলাদা ডাটা রিটার্ন করছি
-    if (userType === "customer") {
+    if (user) {
       return {
         success: true,
-        data: {
-          profile: safeUser,
-          roleInfo: "This is customer exclusive data",
-          totalOrders: 12,
-          pendingDeliveries: 1,
-        },
-      };
-    } else if (userType === "shopOwner") {
-      return {
-        success: true,
-        data: {
-          profile: safeUser,
-          roleInfo: "This is shop owner exclusive data",
-          totalProducts: 45,
-          totalSales: 12000,
-        },
+        data: safeUser,
       };
     }
 
@@ -54,17 +38,22 @@ export async function getProfileData(userId, userType) {
   }
 }
 
-export const updateProfileData = async (userId, userType, updatedData) => {
+export const updateProfileData = async (userEmail, updatedData) => {
   try {
     await dbConnect();
 
     // Data validation or removing sensitive fields should be done here if needed.
     const user = await User.findOneAndUpdate(
-      { _id: userId, userType },
+      { email: userEmail },
       { $set: updatedData },
-      { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     )
-      .select("-password")
+      .select([
+        "-password",
+        "-refreshToken",
+        "-refreshTokenExpires",
+        "-updatedAt",
+      ])
       .lean();
 
     if (!user) {
@@ -74,9 +63,8 @@ export const updateProfileData = async (userId, userType, updatedData) => {
     const safeUser = {
       ...user,
       _id: user._id.toString(),
+      email: user.email,
       shopId: user.shopId ? user.shopId.toString() : null,
-      createdAt: user.createdAt?.toISOString(),
-      updatedAt: user.updatedAt?.toISOString(),
     };
 
     return {

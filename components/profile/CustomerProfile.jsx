@@ -1,21 +1,17 @@
 import { auth } from "@/lib/auth";
 import { getProfileData } from "@/actions";
 import CustomerPersonalDetailsCard from "./CustomerPersonalDetailsCard";
-import ProfileEditForm from "./ProfileEditForm";
+import SingOutButtonProfile from "./SingOutButtonProfile";
 
 const CustomerProfile = async () => {
-  // ১. সেশন চেক করা (কুকি হ্যান্ডেল হয়ে গেল)
   const session = await auth();
 
   if (!session?.user) {
     return <div>Please log in</div>;
   }
 
-  // ২. Fetch API বাদ দিয়ে সরাসরি অ্যাকশন কল! ফাস্ট এবং সিকিউর
-  const result = await getProfileData(session.user.id, session.user.userType);
+  const result = await getProfileData(session.user.id);
   const profileData = result.success ? result.data : null;
-
-  console.log("Customer Profile loaded via Action:", profileData?.profile);
 
   return (
     <div className="max-w-300 mx-auto w-full p-6">
@@ -26,15 +22,9 @@ const CustomerProfile = async () => {
         </p>
       </div>
 
-      {profileData?.profile && (
-        <div className="mb-8">
-          <ProfileEditForm user={profileData.profile} />
-        </div>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Personal Details Card */}
-        <CustomerPersonalDetailsCard />
+        <CustomerPersonalDetailsCard initialData={profileData} />
 
         {/* Quick Actions Side */}
         <div className="lg:col-span-1 space-y-6">
@@ -82,9 +72,7 @@ const CustomerProfile = async () => {
                 Go to Cart
               </a>
               <div className="mt-2 pt-2 border-t border-gray-100">
-                <button className="text-sm text-red-600 hover:underline px-2 py-1 font-medium">
-                  Sign Out
-                </button>
+                <SingOutButtonProfile />
               </div>
             </div>
           </div>
