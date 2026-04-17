@@ -1,4 +1,22 @@
-const CustomerProfile = () => {
+import { auth } from "@/lib/auth";
+import { getProfileData } from "@/actions";
+import CustomerPersonalDetailsCard from "./CustomerPersonalDetailsCard";
+import ProfileEditForm from "./ProfileEditForm";
+
+const CustomerProfile = async () => {
+  // ১. সেশন চেক করা (কুকি হ্যান্ডেল হয়ে গেল)
+  const session = await auth();
+
+  if (!session?.user) {
+    return <div>Please log in</div>;
+  }
+
+  // ২. Fetch API বাদ দিয়ে সরাসরি অ্যাকশন কল! ফাস্ট এবং সিকিউর
+  const result = await getProfileData(session.user.id, session.user.userType);
+  const profileData = result.success ? result.data : null;
+
+  console.log("Customer Profile loaded via Action:", profileData?.profile);
+
   return (
     <div className="max-w-300 mx-auto w-full p-6">
       <div className="mb-8">
@@ -8,82 +26,15 @@ const CustomerProfile = () => {
         </p>
       </div>
 
+      {profileData?.profile && (
+        <div className="mb-8">
+          <ProfileEditForm user={profileData.profile} />
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Personal Details Card */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
-            <div className="bg-gray-50 px-6 py-3 border-b border-gray-300">
-              <h2 className="font-bold text-gray-700 uppercase tracking-wider text-xs">
-                Personal Information
-              </h2>
-            </div>
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Full Name
-                  </label>
-                  <p className="font-medium">John Doe</p>
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Email Address
-                  </label>
-                  <p className="font-medium">john.doe@example.com</p>
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Phone Number
-                  </label>
-                  <p className="font-medium">+880 1711-000000</p>
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    Account Type
-                  </label>
-                  <p className="font-medium">Customer</p>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <button className="px-4 py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors">
-                  <i
-                    data-lucide="pencil"
-                    className="w-4 h-4 inline mr-2 text-gray-700"
-                  ></i>
-                  Edit Details
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Shipping Addresses */}
-          <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
-            <div className="bg-gray-50 px-6 py-3 border-b border-gray-300 flex justify-between items-center">
-              <h2 className="font-bold text-gray-700 uppercase tracking-wider text-xs">
-                Default Address
-              </h2>
-            </div>
-            <div className="p-6">
-              <div className="flex gap-4 items-start">
-                <i
-                  data-lucide="map-pin"
-                  className="w-5 h-5 text-gray-400 mt-1"
-                ></i>
-                <div>
-                  <p className="font-bold text-sm mb-1">Home</p>
-                  <p className="text-sm text-gray-600">
-                    123 Main St, Apartment 4B
-                    <br />
-                    Dhaka, 1212
-                    <br />
-                    Bangladesh
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CustomerPersonalDetailsCard />
 
         {/* Quick Actions Side */}
         <div className="lg:col-span-1 space-y-6">

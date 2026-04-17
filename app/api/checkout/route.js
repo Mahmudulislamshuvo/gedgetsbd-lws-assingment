@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/serverAuth";
 
-export async function GET() {
-  const auth = await requireAuth();
+export async function GET(request) {
+  const auth = await requireAuth(request);
   if (!auth.ok) {
     return auth.response;
   }
