@@ -18,6 +18,11 @@ const UserSchema = new Schema(
       type: String,
       default: null,
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     address: {
       village: {
         type: String,

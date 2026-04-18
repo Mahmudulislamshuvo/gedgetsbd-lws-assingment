@@ -13,6 +13,32 @@ const ShopSchema = new Schema(
       required: true,
       unique: true,
     },
+    description: {
+      type: String,
+      default: "",
+    },
+    logo: {
+      type: String,
+      default: "",
+    },
+    products: {
+      type: [Schema.Types.ObjectId],
+      ref: "Product",
+      default: [],
+    },
+    location: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

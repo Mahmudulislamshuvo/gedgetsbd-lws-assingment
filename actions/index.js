@@ -79,3 +79,37 @@ export const updateProfileData = async (userEmail, updatedData) => {
     };
   }
 };
+
+export const addNewProducts = async (shopId, productData) => {
+  try {
+    await dbConnect();
+
+    const findShop = await Shop.findById(shopId);
+
+    if (!findShop) {
+      return { success: false, error: "Shop not found" };
+    }
+
+    const addProduct = await Product.create({
+      ...productData,
+      shopId,
+    });
+
+    if (!addProduct) {
+      return { success: false, error: "Failed to add product" };
+    }
+
+    return {
+      success: true,
+      data: addProduct,
+    };
+
+    //
+  } catch (error) {
+    console.error("Action Error:", error);
+    return {
+      success: false,
+      error: "Something went wrong adding new products",
+    };
+  }
+};
