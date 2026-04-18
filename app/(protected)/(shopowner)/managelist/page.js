@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const ManageListPage = () => {
@@ -6,12 +7,12 @@ const ManageListPage = () => {
       <div className="max-w-375 mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-normal">Manage Inventory</h1>
-          <a
-            href="create.html"
+          <Link
+            href="/managelist/create"
             className="bg-amazon-yellow hover:bg-amazon-yellow_hover px-6 py-2 rounded-md text-sm font-bold shadow-sm border border-amazon-secondary transition-colors"
           >
             Add a Product
-          </a>
+          </Link>
         </div>
 
         {/* <!-- Filters --> */}
@@ -146,69 +147,6 @@ const ManageListPage = () => {
                 </td>
               </tr>
 
-              {/* <!-- Product 2 --> */}
-              <tr className="hover:bg-gray-50">
-                <td className="p-3 text-center">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">
-                    In Stock
-                  </span>
-                </td>
-                <td className="p-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=100"
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                </td>
-                <td className="p-3">
-                  <div className="font-medium">
-                    iPhone 15 Pro Max - Blue Titanium
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    SKU: IP15PM-BT-256
-                  </div>
-                </td>
-                <td className="p-3 text-gray-600">Smartphones & Tablets</td>
-                <td className="p-3 text-gray-600">Apple</td>
-                <td className="p-3 font-bold">1,45,000</td>
-                <td className="p-3">
-                  <span className="text-green-600 font-bold">15</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Edit"
-                    >
-                      <i
-                        data-lucide="pencil"
-                        className="w-4 h-4 text-amazon-blue"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Unpublish"
-                    >
-                      <i
-                        data-lucide="eye-off"
-                        className="w-4 h-4 text-gray-600"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Delete"
-                    >
-                      <i
-                        data-lucide="trash-2"
-                        className="w-4 h-4 text-red-600"
-                      ></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
               {/* <!-- Product 3 --> */}
               <tr className="hover:bg-gray-50">
                 <td className="p-3 text-center">
@@ -236,69 +174,6 @@ const ManageListPage = () => {
                 <td className="p-3 font-bold">38,500</td>
                 <td className="p-3">
                   <span className="text-yellow-600 font-bold">3</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Edit"
-                    >
-                      <i
-                        data-lucide="pencil"
-                        className="w-4 h-4 text-amazon-blue"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Unpublish"
-                    >
-                      <i
-                        data-lucide="eye-off"
-                        className="w-4 h-4 text-gray-600"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Delete"
-                    >
-                      <i
-                        data-lucide="trash-2"
-                        className="w-4 h-4 text-red-600"
-                      ></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {/* <!-- Product 4 --> */}
-              <tr className="hover:bg-gray-50">
-                <td className="p-3 text-center">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">
-                    In Stock
-                  </span>
-                </td>
-                <td className="p-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1527690710675-4ae7d334803b?w=100"
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                </td>
-                <td className="p-3">
-                  <div className="font-medium">
-                    Razer BlackWidow V4 Pro Keyboard
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    SKU: RZR-BW-V4-PRO
-                  </div>
-                </td>
-                <td className="p-3 text-gray-600">Gaming Accessories</td>
-                <td className="p-3 text-gray-600">Razer</td>
-                <td className="p-3 font-bold">18,500</td>
-                <td className="p-3">
-                  <span className="text-green-600 font-bold">12</span>
                 </td>
                 <td className="p-3">
                   <div className="flex items-center justify-end gap-2">
