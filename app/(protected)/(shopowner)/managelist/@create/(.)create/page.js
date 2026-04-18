@@ -3,9 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import ProductForm from "@/components/managelist/ProductForm";
+import { useSession } from "next-auth/react";
 
 const CreateProductModal = () => {
   const router = useRouter();
+
+  const { data } = useSession();
 
   // Prevent background scrolling when modal is open
   useEffect(() => {
@@ -32,7 +35,10 @@ const CreateProductModal = () => {
         </button>
 
         {/* Load the common ProductForm component */}
-        <ProductForm onClose={() => router.back()} />
+        <ProductForm
+          shopId={data?.user?.shopId}
+          onClose={() => router.back()}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use server";
 
 import { dbConnect } from "@/lib/dbConnect";
+import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
 
 export async function getProfileData(userId) {
@@ -80,7 +81,18 @@ export const updateProfileData = async (userEmail, updatedData) => {
   }
 };
 
-export const addNewProducts = async (shopId, productData) => {
+export const addNewProducts = async (shopId, formData) => {
+  const findShop = await Shop.findById(shopId);
+
+  console.log(formData);
+  console.log("Shop iD", shopId);
+
+  if (!findShop) {
+    return { success: false, error: "Shop not found" };
+  }
+
+  return;
+
   try {
     await dbConnect();
 
