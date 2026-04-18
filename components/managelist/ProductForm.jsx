@@ -69,7 +69,7 @@ const ProductForm = ({ shopId, onClose }) => {
               <div>
                 <label className="block text-sm font-bold mb-1">Brand</label>
                 <select
-                  name="brand" // যুক্ত করা হয়েছে
+                  name="brand"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="Apple">Apple</option>
@@ -88,7 +88,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   Condition
                 </label>
                 <select
-                  name="condition" // যুক্ত করা হয়েছে
+                  name="condition"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="New">New</option>
@@ -101,7 +101,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 Description
               </label>
               <textarea
-                name="description" // যুক্ত করা হয়েছে
+                name="description"
                 rows="4"
                 placeholder="Describe your product features, specifications, and benefits..."
                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
@@ -126,7 +126,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <input
                   type="number"
-                  name="price" // যুক্ত করা হয়েছে
+                  name="price"
                   step="0.01"
                   placeholder="0.00"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
@@ -139,7 +139,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <input
                   type="number"
-                  name="stockQuantity" // যুক্ত করা হয়েছে
+                  name="stockQuantity"
                   placeholder="0"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                   required
@@ -151,7 +151,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <input
                   type="text"
-                  name="sku" // যুক্ত করা হয়েছে
+                  name="sku"
                   placeholder="e.g., MBP-M2-16-1TB"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
@@ -163,7 +163,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   Availability
                 </label>
                 <select
-                  name="availability" // যুক্ত করা হয়েছে
+                  name="availability"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="In Stock">In Stock</option>
@@ -176,7 +176,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   Warranty Period
                 </label>
                 <select
-                  name="warrantyPeriod" // যুক্ত করা হয়েছে
+                  name="warrantyPeriod"
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="No Warranty">No Warranty</option>
@@ -204,7 +204,6 @@ const ProductForm = ({ shopId, onClose }) => {
                 Main Product Image
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-md p-8 text-center hover:border-amazon-blue transition-colors cursor-pointer relative">
-                {/* আপনার Upload আইকনটি এখানে */}
                 <Upload className="w-12 h-12 mx-auto text-gray-400 mb-2" />
 
                 <p className="text-sm text-gray-600 mb-1">
@@ -217,7 +216,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   name="mainImage"
                   accept="image/*"
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  required
+                  //   required
                 />
               </div>
             </div>

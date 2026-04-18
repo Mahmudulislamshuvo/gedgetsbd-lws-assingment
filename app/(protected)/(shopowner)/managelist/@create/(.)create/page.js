@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 
 const CreateProductModal = () => {
   const router = useRouter();
-
   const { data } = useSession();
 
   // Prevent background scrolling when modal is open
@@ -17,6 +16,8 @@ const CreateProductModal = () => {
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  const shopId = data?.user?.shopId;
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-sm">
@@ -35,10 +36,7 @@ const CreateProductModal = () => {
         </button>
 
         {/* Load the common ProductForm component */}
-        <ProductForm
-          shopId={data?.user?.shopId}
-          onClose={() => router.back()}
-        />
+        <ProductForm shopId={shopId} onClose={() => router.back()} />
       </div>
     </div>
   );

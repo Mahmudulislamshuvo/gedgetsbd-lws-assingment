@@ -1,6 +1,7 @@
 "use server";
 
 import { dbConnect } from "@/lib/dbConnect";
+import Product from "@/Models/productSchema";
 import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
 
@@ -82,17 +83,6 @@ export const updateProfileData = async (userEmail, updatedData) => {
 };
 
 export const addNewProducts = async (shopId, formData) => {
-  const findShop = await Shop.findById(shopId);
-
-  console.log(formData);
-  console.log("Shop iD", shopId);
-
-  if (!findShop) {
-    return { success: false, error: "Shop not found" };
-  }
-
-  return;
-
   try {
     await dbConnect();
 
@@ -101,6 +91,26 @@ export const addNewProducts = async (shopId, formData) => {
     if (!findShop) {
       return { success: false, error: "Shop not found" };
     }
+
+    const productData = {
+      productName: formData.get("productName"),
+      category: formData.get("category"),
+      brand: formData.get("brand"),
+      condition: formData.get("condition"),
+      description: formData.get("description"),
+      price: Number(formData.get("price")),
+      stockQuantity: Number(formData.get("stockQuantity")),
+      sku: formData.get("sku"),
+      availability: formData.get("availability"),
+      warrantyPeriod: formData.get("warrantyPeriod"),
+      specifications: {
+        processor: formData.get("processor"),
+        ram: formData.get("ram"),
+        storage: formData.get("storage"),
+        displaySize: formData.get("displaySize"),
+        otherDetails: formData.get("specifications"),
+      },
+    };
 
     const addProduct = await Product.create({
       ...productData,
@@ -111,9 +121,13 @@ export const addNewProducts = async (shopId, formData) => {
       return { success: false, error: "Failed to add product" };
     }
 
+    // Convert Mongoose document to a plain JavaScript object
+    // so Next.js can safely pass it to the Client Component
+    const plainProduct = JSON.parse(JSON.stringify(addProduct));
+
     return {
       success: true,
-      data: addProduct,
+      data: plainProduct,
     };
 
     //

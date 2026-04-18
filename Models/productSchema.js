@@ -56,7 +56,7 @@ const ProductSchema = new Schema(
     images: {
       mainImage: {
         type: String,
-        required: true,
+        required: false,
       },
       additionalImages: {
         type: [String],
