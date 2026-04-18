@@ -11,13 +11,6 @@ const ProductForm = ({ onClose }) => {
             Create a new listing for your gadget product.
           </p>
         </div>
-        {/* <Link
-          href="/managelist"
-          className="text-amazon-blue hover:underline text-sm flex items-center gap-1"
-        >
-          <i data-lucide="arrow-left" className="w-4 h-4"></i> Back to Manage
-          List
-        </Link> */}
       </div>
 
       <form

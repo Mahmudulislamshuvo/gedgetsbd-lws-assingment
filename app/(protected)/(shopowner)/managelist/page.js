@@ -1,3 +1,4 @@
+import { EyeOffIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -120,28 +121,19 @@ const ManageListPage = () => {
                       className="p-1.5 hover:bg-gray-100 rounded"
                       title="Edit"
                     >
-                      <i
-                        data-lucide="pencil"
-                        className="w-4 h-4 text-amazon-blue"
-                      ></i>
+                      <PencilIcon className="w-4 h-4 text-amazon-blue" />
                     </button>
                     <button
                       className="p-1.5 hover:bg-gray-100 rounded"
                       title="Unpublish"
                     >
-                      <i
-                        data-lucide="eye-off"
-                        className="w-4 h-4 text-gray-600"
-                      ></i>
+                      <EyeOffIcon className="w-4 h-4 text-gray-600" />
                     </button>
                     <button
                       className="p-1.5 hover:bg-gray-100 rounded"
                       title="Delete"
                     >
-                      <i
-                        data-lucide="trash-2"
-                        className="w-4 h-4 text-red-600"
-                      ></i>
+                      <Trash2Icon className="w-4 h-4 text-red-600" />
                     </button>
                   </div>
                 </td>
