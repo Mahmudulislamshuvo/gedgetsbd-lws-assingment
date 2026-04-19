@@ -2,11 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { Plus, Upload } from "lucide-react";
 import { addNewProducts } from "@/actions";
+import ImageComponent from "./ImageComponent";
 
 const ProductForm = ({ shopId, onClose }) => {
   const addProductWithShopId = addNewProducts.bind(null, shopId);
-
-  console.log("Product from", shopId);
 
   return (
     <div className="w-full p-6">
@@ -191,61 +190,7 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
 
         {/* Step 3: Product Images */}
-        <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
-          <div className="bg-gray-50 px-6 py-3 border-b border-gray-300">
-            <h2 className="font-bold text-gray-700 uppercase tracking-wider text-xs">
-              Step 3: Product Images
-            </h2>
-          </div>
-          <div className="p-6 space-y-4">
-            {/* Main Image */}
-            <div>
-              <label className="block text-sm font-bold mb-1">
-                Main Product Image
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-md p-8 text-center hover:border-amazon-blue transition-colors cursor-pointer relative">
-                <Upload className="w-12 h-12 mx-auto text-gray-400 mb-2" />
-
-                <p className="text-sm text-gray-600 mb-1">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
-
-                <input
-                  type="file"
-                  name="mainImage"
-                  accept="image/*"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  //   required
-                />
-              </div>
-            </div>
-
-            {/* Additional Images */}
-            <div>
-              <label className="block text-sm font-bold mb-1">
-                Additional Images (Optional)
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[1, 2, 3, 4].map((index) => (
-                  <div
-                    key={index}
-                    className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center hover:border-amazon-blue transition-colors cursor-pointer aspect-square flex items-center justify-center relative"
-                  >
-                    <Plus className="w-8 h-8 text-gray-400" />
-
-                    <input
-                      type="file"
-                      name="additionalImages"
-                      accept="image/*"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <ImageComponent />
 
         {/* Step 4: Specifications */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">

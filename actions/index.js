@@ -103,6 +103,8 @@ export const addNewProducts = async (shopId, formData) => {
       sku: formData.get("sku"),
       availability: formData.get("availability"),
       warrantyPeriod: formData.get("warrantyPeriod"),
+      mainImage: formData.get("mainImage"),
+      additionalImages: formData.getAll("additionalImages"),
       specifications: {
         processor: formData.get("processor"),
         ram: formData.get("ram"),
@@ -111,6 +113,10 @@ export const addNewProducts = async (shopId, formData) => {
         otherDetails: formData.get("specifications"),
       },
     };
+
+    console.log(productData);
+
+    return;
 
     const addProduct = await Product.create({
       ...productData,
