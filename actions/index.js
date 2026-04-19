@@ -92,6 +92,11 @@ export const addNewProducts = async (shopId, formData) => {
       return { success: false, error: "Shop not found" };
     }
 
+    const rawAdditionalImages = formData.getAll("additionalImages");
+    const additionalImages = rawAdditionalImages.filter(
+      (url) => typeof url === "string" && url.trim() !== "",
+    );
+
     const productData = {
       productName: formData.get("productName"),
       category: formData.get("category"),
@@ -103,8 +108,10 @@ export const addNewProducts = async (shopId, formData) => {
       sku: formData.get("sku"),
       availability: formData.get("availability"),
       warrantyPeriod: formData.get("warrantyPeriod"),
-      mainImage: formData.get("mainImage"),
-      additionalImages: formData.getAll("additionalImages"),
+      images: {
+        mainImage: formData.get("mainImage") || "",
+        additionalImages,
+      },
       specifications: {
         processor: formData.get("processor"),
         ram: formData.get("ram"),
@@ -114,9 +121,7 @@ export const addNewProducts = async (shopId, formData) => {
       },
     };
 
-    console.log(productData);
-
-    return;
+    return console.log(productData);
 
     const addProduct = await Product.create({
       ...productData,
