@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import { Plus, Upload } from "lucide-react";
 import { addNewProducts } from "@/actions";
 import ImageComponent from "./ImageComponent";
+import ProductManageActionButton from "./ProductManageActionButton";
 
 const ProductForm = ({ shopId, onClose }) => {
   const addProductWithShopId = addNewProducts.bind(null, shopId);
@@ -261,31 +261,7 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4">
-          {onClose ? (
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border border-gray-400 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors text-center"
-            >
-              Cancel
-            </button>
-          ) : (
-            <Link
-              href="/managelist"
-              className="px-6 py-2 border border-gray-400 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors text-center"
-            >
-              Cancel
-            </Link>
-          )}
-
-          <button
-            type="submit"
-            className="px-6 py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors"
-          >
-            Publish Product
-          </button>
-        </div>
+        <ProductManageActionButton onClose={onClose} />
       </form>
     </div>
   );

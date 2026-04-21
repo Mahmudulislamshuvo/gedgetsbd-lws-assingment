@@ -4,6 +4,8 @@ import { dbConnect } from "@/lib/dbConnect";
 import Product from "@/Models/productSchema";
 import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
+import { redirect, RedirectType } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function getProfileData(userId) {
   try {
@@ -82,8 +84,19 @@ export const updateProfileData = async (userEmail, updatedData) => {
   }
 };
 
-export const addNewProducts = async (shopId, formData) => {
+export const addNewProducts = async (shopId, _prevState, formData) => {
   try {
+    const resolvedFormData =
+      formData instanceof FormData ? formData : _prevState;
+
+    if (!(resolvedFormData instanceof FormData)) {
+      return {
+        success: false,
+        data: null,
+        error: "Invalid form submission payload",
+      };
+    }
+
     await dbConnect();
 
     const findShop = await Shop.findById(shopId);
@@ -92,36 +105,34 @@ export const addNewProducts = async (shopId, formData) => {
       return { success: false, error: "Shop not found" };
     }
 
-    const rawAdditionalImages = formData.getAll("additionalImages");
+    const rawAdditionalImages = resolvedFormData.getAll("additionalImages");
     const additionalImages = rawAdditionalImages.filter(
       (url) => typeof url === "string" && url.trim() !== "",
     );
 
     const productData = {
-      productName: formData.get("productName"),
-      category: formData.get("category"),
-      brand: formData.get("brand"),
-      condition: formData.get("condition"),
-      description: formData.get("description"),
-      price: Number(formData.get("price")),
-      stockQuantity: Number(formData.get("stockQuantity")),
-      sku: formData.get("sku"),
-      availability: formData.get("availability"),
-      warrantyPeriod: formData.get("warrantyPeriod"),
+      productName: resolvedFormData.get("productName"),
+      category: resolvedFormData.get("category"),
+      brand: resolvedFormData.get("brand"),
+      condition: resolvedFormData.get("condition"),
+      description: resolvedFormData.get("description"),
+      price: Number(resolvedFormData.get("price")),
+      stockQuantity: Number(resolvedFormData.get("stockQuantity")),
+      sku: resolvedFormData.get("sku"),
+      availability: resolvedFormData.get("availability"),
+      warrantyPeriod: resolvedFormData.get("warrantyPeriod"),
       images: {
-        mainImage: formData.get("mainImage") || "",
+        mainImage: resolvedFormData.get("mainImage") || "",
         additionalImages,
       },
       specifications: {
-        processor: formData.get("processor"),
-        ram: formData.get("ram"),
-        storage: formData.get("storage"),
-        displaySize: formData.get("displaySize"),
-        otherDetails: formData.get("specifications"),
+        processor: resolvedFormData.get("processor"),
+        ram: resolvedFormData.get("ram"),
+        storage: resolvedFormData.get("storage"),
+        displaySize: resolvedFormData.get("displaySize"),
+        otherDetails: resolvedFormData.get("specifications"),
       },
     };
-
-    return console.log(productData);
 
     const addProduct = await Product.create({
       ...productData,
@@ -129,23 +140,24 @@ export const addNewProducts = async (shopId, formData) => {
     });
 
     if (!addProduct) {
-      return { success: false, error: "Failed to add product" };
+      return { success: false, data: null, error: "Failed to add product" };
     }
 
-    // Convert Mongoose document to a plain JavaScript object
-    // so Next.js can safely pass it to the Client Component
-    const plainProduct = JSON.parse(JSON.stringify(addProduct));
-
-    return {
-      success: true,
-      data: plainProduct,
-    };
-
-    //
+    revalidatePath("/managelist");
+    redirect("/managelist", RedirectType.replace);
   } catch (error) {
-    console.error("Action Error:", error);
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "digest" in error &&
+      String(error.digest).startsWith("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
+
     return {
       success: false,
+      data: null,
       error: "Something went wrong adding new products",
     };
   }
