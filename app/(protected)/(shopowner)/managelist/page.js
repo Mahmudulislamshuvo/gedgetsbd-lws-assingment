@@ -1,5 +1,6 @@
 import { getAllProducts } from "@/actions";
 import AllProductTable from "@/components/managelist/AllProductTable";
+import FilterManagelist from "@/components/managelist/FilterManagelist";
 import Pagination from "@/components/managelist/Pagination";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -13,7 +14,14 @@ const ManageListPage = async ({ searchParams }) => {
   const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
   const limit = 10;
 
-  const shopAllProductData = await getAllProducts(shopId, page, limit);
+  const shopAllProductData = await getAllProducts(shopId, page, limit, {
+    status: searchParams?.status ?? "All",
+    category: searchParams?.category ?? "All Categories",
+    brand: searchParams?.brand ?? "All Brands",
+    searchTerm: searchParams?.searchTerm ?? "",
+  });
+
+  // const shopAllProductData = await getAllProducts(shopId, page, limit);
 
   const shopAllProduct = shopAllProductData?.data ?? [];
   const pagination = shopAllProductData?.pagination ?? {
@@ -42,54 +50,7 @@ const ManageListPage = async ({ searchParams }) => {
         </div>
 
         {/* <!-- Filters --> */}
-        <div className="bg-white border border-gray-300 rounded shadow-sm p-4 mb-6 flex flex-wrap items-center gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <span className="font-bold">Status:</span>
-            <select className="border border-gray-300 py-1 px-2 rounded outline-none focus:ring-1 focus:ring-amazon-blue">
-              <option>All</option>
-              <option>Active</option>
-              <option>Inactive</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2 border-l border-gray-300 pl-4">
-            <span className="font-bold">Category:</span>
-            <select className="border border-gray-300 py-1 px-2 rounded outline-none focus:ring-1 focus:ring-amazon-blue">
-              <option>All Categories</option>
-              <option>Laptops & Computers</option>
-              <option>Smartphones & Tablets</option>
-              <option>Audio & Headphones</option>
-              <option>Gaming Accessories</option>
-              <option>Cameras & Photography</option>
-              <option>Wearables & Smartwatches</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2 border-l border-gray-300 pl-4">
-            <span className="font-bold">Brand:</span>
-            <select className="border border-gray-300 py-1 px-2 rounded outline-none focus:ring-1 focus:ring-amazon-blue">
-              <option>All Brands</option>
-              <option>Apple</option>
-              <option>Samsung</option>
-              <option>Dell</option>
-              <option>HP</option>
-              <option>Lenovo</option>
-              <option>Sony</option>
-              <option>Razer</option>
-            </select>
-          </div>
-          <div className="flex-1 flex items-center gap-2 border-l border-gray-300 pl-4">
-            <div className="relative w-full max-w-sm">
-              <i
-                data-lucide="search"
-                className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"
-              ></i>
-              <input
-                type="text"
-                placeholder="Search by SKU or Name"
-                className="w-full pl-8 pr-2 py-1 border border-gray-300 rounded outline-none focus:ring-1 focus:ring-amazon-blue"
-              />
-            </div>
-          </div>
-        </div>
+        <FilterManagelist />
 
         {/* <!-- Table --> */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-x-auto">

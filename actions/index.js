@@ -135,25 +135,53 @@ export const addNewProducts = async (shopId, formData) => {
   }
 };
 
-export const getAllProducts = async (shopId, page = 1, limit = 10) => {
+export const getAllProducts = async (
+  shopId,
+  page = 1,
+  limit = 10,
+  filters = {},
+) => {
   try {
     await dbConnect();
 
     const skip = (page - 1) * limit;
 
-    const products = await Product.find({ shopId }).skip(skip).limit(limit);
+    let query = { shopId };
 
-    const total = await Product.countDocuments({ shopId });
+    if (filters.status && filters.status !== "All") {
+      query.status = filters.status.toLowerCase();
+    }
+
+    if (filters.category && filters.category !== "All Categories") {
+      query.category = filters.category;
+    }
+    if (filters.brand && filters.brand !== "All Brands") {
+      query.brand = filters.brand;
+    }
+    if (filters.searchTerm) {
+      query.$or = [
+        { name: { $regex: filters.searchTerm, $options: "i" } },
+        { sku: { $regex: filters.searchTerm, $options: "i" } },
+      ];
+    }
+
+    const products = await Product.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+    const total = await Product.countDocuments(query);
+
+    if (!products) {
+      return {
+        success: false,
+        error: "No products found for this shop",
+      };
+    }
 
     return {
       success: true,
       data: products,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   } catch (error) {
     console.error("Action Error:", error);

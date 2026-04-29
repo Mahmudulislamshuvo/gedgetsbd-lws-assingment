@@ -1,5 +1,4 @@
 import productIsAvailable from "@/utils/productIsAvailable";
-import FilterManagelist from "./FilterManagelist";
 import { EyeOffIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
 const AllProductTable = ({ shopAllProduct }) => {
@@ -12,7 +11,21 @@ const AllProductTable = ({ shopAllProduct }) => {
 
   return (
     <table className="w-full text-sm text-left border-collapse">
-      <FilterManagelist />
+      <thead className="bg-gray-100 border-b border-gray-300 text-gray-600 font-bold uppercase tracking-wider text-[11px]">
+        <tr>
+          <th className="p-3 text-center w-12">
+            <input type="checkbox" />
+          </th>
+          <th className="p-3">Status</th>
+          <th className="p-3">Image</th>
+          <th className="p-3">Product Name</th>
+          <th className="p-3">Category</th>
+          <th className="p-3">Brand</th>
+          <th className="p-3">Price (৳)</th>
+          <th className="p-3">Available</th>
+          <th className="p-3 text-right">Actions</th>
+        </tr>
+      </thead>
       <tbody className="divide-y divide-gray-200">
         {products.length === 0 ? (
           <tr>
