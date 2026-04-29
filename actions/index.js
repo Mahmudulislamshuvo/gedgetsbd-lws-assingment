@@ -135,80 +135,16 @@ export const addNewProducts = async (shopId, formData) => {
   }
 };
 
-// export const addNewProducts = async (shopId, _prevState, formData) => {
-//   try {
-//     const resolvedFormData =
-//       formData instanceof FormData ? formData : _prevState;
-
-//     if (!(resolvedFormData instanceof FormData)) {
-//       return {
-//         success: false,
-//         data: null,
-//         error: "Invalid form submission payload",
-//       };
-//     }
-
-//     await dbConnect();
-
-//     const findShop = await Shop.findById(shopId);
-
-//     if (!findShop) {
-//       return { success: false, error: "Shop not found" };
-//     }
-
-//     const rawAdditionalImages = resolvedFormData.getAll("additionalImages");
-//     const additionalImages = rawAdditionalImages.filter(
-//       (url) => typeof url === "string" && url.trim() !== "",
-//     );
-
-//     const productData = {
-//       productName: resolvedFormData.get("productName"),
-//       category: resolvedFormData.get("category"),
-//       brand: resolvedFormData.get("brand"),
-//       condition: resolvedFormData.get("condition"),
-//       description: resolvedFormData.get("description"),
-//       price: Number(resolvedFormData.get("price")),
-//       stockQuantity: Number(resolvedFormData.get("stockQuantity")),
-//       sku: resolvedFormData.get("sku"),
-//       availability: resolvedFormData.get("availability"),
-//       warrantyPeriod: resolvedFormData.get("warrantyPeriod"),
-//       images: {
-//         mainImage: resolvedFormData.get("mainImage") || "",
-//         additionalImages,
-//       },
-//       specifications: {
-//         processor: resolvedFormData.get("processor"),
-//         ram: resolvedFormData.get("ram"),
-//         storage: resolvedFormData.get("storage"),
-//         displaySize: resolvedFormData.get("displaySize"),
-//         otherDetails: resolvedFormData.get("specifications"),
-//       },
-//     };
-
-//     const addProduct = await Product.create({
-//       ...productData,
-//       shopId,
-//     });
-
-//     if (!addProduct) {
-//       return { success: false, data: null, error: "Failed to add product" };
-//     }
-
-//     revalidatePath("/managelist");
-//   } catch (error) {
-//     if (
-//       typeof error === "object" &&
-//       error !== null &&
-//       "digest" in error &&
-//       String(error.digest).startsWith("NEXT_REDIRECT")
-//     ) {
-//       throw error;
-//     }
-
-//     return {
-//       success: false,
-//       data: null,
-//       error: "Something went wrong adding new products",
-//     };
-//   }
-// };
+export const getAllProducts = async (shopId) => {
+  try {
+    await dbConnect();
+    const products = await Product.find({ shopId });
+    return { success: true, data: products };
+  } catch (error) {
+    console.error("Action Error:", error);
+    return {
+      success: false,
+      error: "Something went wrong fetching all products",
+    };
+  }
+};
