@@ -1,11 +1,32 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+
 import { addNewProducts } from "@/actions";
 import ImageComponent from "./ImageComponent";
 import ProductManageActionButton from "./ProductManageActionButton";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 
 const ProductForm = ({ shopId, onClose }) => {
+  const router = useRouter();
+  const [imageResetKey, setImageResetKey] = useState(0);
+  const [isNavigating, startTransition] = useTransition();
   const addProductWithShopId = addNewProducts.bind(null, shopId);
+
+  const handleSubmit = async (formData) => {
+    const result = await addProductWithShopId(formData);
+
+    if (result?.success) {
+      setImageResetKey((prev) => prev + 1);
+    }
+
+    startTransition(() => {
+      if (onClose) {
+        onClose();
+      } else {
+        router.replace("/managelist");
+      }
+    });
+  };
 
   return (
     <div className="w-full p-6">
@@ -18,7 +39,7 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
       </div>
 
-      <form action={addProductWithShopId} className="space-y-6">
+      <form action={handleSubmit} className="space-y-6">
         {/* <input type="hidden" name="shopId" value={shopId} /> */}
         {/* Step 1: Product Identity */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
@@ -190,7 +211,7 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
 
         {/* Step 3: Product Images */}
-        <ImageComponent />
+        <ImageComponent resetKey={imageResetKey} />
 
         {/* Step 4: Specifications */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
@@ -261,7 +282,10 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
 
         {/* Action Buttons */}
-        <ProductManageActionButton onClose={onClose} />
+        <ProductManageActionButton
+          onClose={onClose}
+          isNavigating={isNavigating}
+        />
       </form>
     </div>
   );

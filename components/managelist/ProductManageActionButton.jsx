@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 
-const ProductManageActionButton = ({ onClose }) => {
+const ProductManageActionButton = ({ onClose, isNavigating = false }) => {
   const { pending } = useFormStatus();
+  const isWorking = pending || isNavigating;
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4">
@@ -27,12 +28,11 @@ const ProductManageActionButton = ({ onClose }) => {
 
       <button
         type="submit"
-        disabled={pending}
-        className="px-6 py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors flex items-center justify-center min-w-[160px] disabled:opacity-70 disabled:cursor-not-allowed"
+        disabled={isWorking}
+        className="px-6 py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors flex items-center justify-center min-w-40 disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        {pending ? (
+        {isWorking ? (
           <>
-            {/* সুন্দর একটি লোডিং স্পিনার (Tailwind) */}
             <svg
               className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-800"
               xmlns="http://www.w3.org/2000/svg"

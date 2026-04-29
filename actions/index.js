@@ -4,7 +4,6 @@ import { dbConnect } from "@/lib/dbConnect";
 import Product from "@/Models/productSchema";
 import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
-import { redirect, RedirectType } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 export async function getProfileData(userId) {
@@ -84,81 +83,132 @@ export const updateProfileData = async (userEmail, updatedData) => {
   }
 };
 
-export const addNewProducts = async (shopId, _prevState, formData) => {
+export const addNewProducts = async (shopId, formData) => {
   try {
-    const resolvedFormData =
-      formData instanceof FormData ? formData : _prevState;
-
-    if (!(resolvedFormData instanceof FormData)) {
-      return {
-        success: false,
-        data: null,
-        error: "Invalid form submission payload",
-      };
+    if (!(formData instanceof FormData)) {
+      return { success: false, error: "Invalid form submission" };
     }
 
     await dbConnect();
-
     const findShop = await Shop.findById(shopId);
+    if (!findShop) return { success: false, error: "Shop not found" };
 
-    if (!findShop) {
-      return { success: false, error: "Shop not found" };
-    }
-
-    const rawAdditionalImages = resolvedFormData.getAll("additionalImages");
+    const rawAdditionalImages = formData.getAll("additionalImages");
     const additionalImages = rawAdditionalImages.filter(
       (url) => typeof url === "string" && url.trim() !== "",
     );
 
     const productData = {
-      productName: resolvedFormData.get("productName"),
-      category: resolvedFormData.get("category"),
-      brand: resolvedFormData.get("brand"),
-      condition: resolvedFormData.get("condition"),
-      description: resolvedFormData.get("description"),
-      price: Number(resolvedFormData.get("price")),
-      stockQuantity: Number(resolvedFormData.get("stockQuantity")),
-      sku: resolvedFormData.get("sku"),
-      availability: resolvedFormData.get("availability"),
-      warrantyPeriod: resolvedFormData.get("warrantyPeriod"),
+      productName: formData.get("productName"),
+      category: formData.get("category"),
+      brand: formData.get("brand"),
+      condition: formData.get("condition"),
+      description: formData.get("description"),
+      price: Number(formData.get("price")),
+      stockQuantity: Number(formData.get("stockQuantity")),
+      sku: formData.get("sku"),
+      availability: formData.get("availability"),
+      warrantyPeriod: formData.get("warrantyPeriod"),
       images: {
-        mainImage: resolvedFormData.get("mainImage") || "",
+        mainImage: formData.get("mainImage") || "",
         additionalImages,
       },
       specifications: {
-        processor: resolvedFormData.get("processor"),
-        ram: resolvedFormData.get("ram"),
-        storage: resolvedFormData.get("storage"),
-        displaySize: resolvedFormData.get("displaySize"),
-        otherDetails: resolvedFormData.get("specifications"),
+        processor: formData.get("processor"),
+        ram: formData.get("ram"),
+        storage: formData.get("storage"),
+        displaySize: formData.get("displaySize"),
+        otherDetails: formData.get("specifications"),
       },
     };
 
-    const addProduct = await Product.create({
-      ...productData,
-      shopId,
-    });
-
+    const addProduct = await Product.create({ ...productData, shopId });
     if (!addProduct) {
-      return { success: false, data: null, error: "Failed to add product" };
+      return { success: false, error: "Failed to add product" };
     }
 
     revalidatePath("/managelist");
-    redirect("/managelist", RedirectType.replace);
-  } catch (error) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "digest" in error &&
-      String(error.digest).startsWith("NEXT_REDIRECT")
-    ) {
-      throw error;
-    }
 
-    return {
-      success: false,
-      data: null,
-      error: "Something went wrong adding new products",
-    };
+    return { success: true, data: JSON.parse(JSON.stringify(addProduct)) };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
   }
 };
+
+// export const addNewProducts = async (shopId, _prevState, formData) => {
+//   try {
+//     const resolvedFormData =
+//       formData instanceof FormData ? formData : _prevState;
+
+//     if (!(resolvedFormData instanceof FormData)) {
+//       return {
+//         success: false,
+//         data: null,
+//         error: "Invalid form submission payload",
+//       };
+//     }
+
+//     await dbConnect();
+
+//     const findShop = await Shop.findById(shopId);
+
+//     if (!findShop) {
+//       return { success: false, error: "Shop not found" };
+//     }
+
+//     const rawAdditionalImages = resolvedFormData.getAll("additionalImages");
+//     const additionalImages = rawAdditionalImages.filter(
+//       (url) => typeof url === "string" && url.trim() !== "",
+//     );
+
+//     const productData = {
+//       productName: resolvedFormData.get("productName"),
+//       category: resolvedFormData.get("category"),
+//       brand: resolvedFormData.get("brand"),
+//       condition: resolvedFormData.get("condition"),
+//       description: resolvedFormData.get("description"),
+//       price: Number(resolvedFormData.get("price")),
+//       stockQuantity: Number(resolvedFormData.get("stockQuantity")),
+//       sku: resolvedFormData.get("sku"),
+//       availability: resolvedFormData.get("availability"),
+//       warrantyPeriod: resolvedFormData.get("warrantyPeriod"),
+//       images: {
+//         mainImage: resolvedFormData.get("mainImage") || "",
+//         additionalImages,
+//       },
+//       specifications: {
+//         processor: resolvedFormData.get("processor"),
+//         ram: resolvedFormData.get("ram"),
+//         storage: resolvedFormData.get("storage"),
+//         displaySize: resolvedFormData.get("displaySize"),
+//         otherDetails: resolvedFormData.get("specifications"),
+//       },
+//     };
+
+//     const addProduct = await Product.create({
+//       ...productData,
+//       shopId,
+//     });
+
+//     if (!addProduct) {
+//       return { success: false, data: null, error: "Failed to add product" };
+//     }
+
+//     revalidatePath("/managelist");
+//   } catch (error) {
+//     if (
+//       typeof error === "object" &&
+//       error !== null &&
+//       "digest" in error &&
+//       String(error.digest).startsWith("NEXT_REDIRECT")
+//     ) {
+//       throw error;
+//     }
+
+//     return {
+//       success: false,
+//       data: null,
+//       error: "Something went wrong adding new products",
+//     };
+//   }
+// };

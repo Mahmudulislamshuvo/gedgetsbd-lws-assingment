@@ -8,7 +8,7 @@ const UPLOAD_PRESET = "my_gadget_shop";
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-const ImageComponent = () => {
+const ImageComponent = ({ resetKey = 0 }) => {
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [additionalImagePreviews, setAdditionalImagePreviews] = useState([]);
   const [mainError, setMainError] = useState("");
@@ -28,6 +28,7 @@ const ImageComponent = () => {
   const additionalImageInputRefs = useRef([]);
   const mainPreviewRef = useRef(null);
   const additionalPreviewsRef = useRef([]);
+  const hasMountedRef = useRef(false);
 
   useEffect(() => {
     mainPreviewRef.current = mainImagePreview;
@@ -71,12 +72,7 @@ const ImageComponent = () => {
       ) {
         event.preventDefault();
         setMainError("Please wait for image upload to finish.");
-        return;
       }
-
-      window.setTimeout(() => {
-        clearAllImages();
-      }, 0);
     };
 
     form.addEventListener("submit", handleFormSubmit);
@@ -150,6 +146,15 @@ const ImageComponent = () => {
       if (input) input.value = "";
     });
   };
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    clearAllImages();
+  }, [resetKey]);
 
   // --- Main Image Handlers ---
   const handleMainImageChange = async (e) => {
