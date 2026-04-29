@@ -1,3 +1,4 @@
+import productIsAvailable from "@/utils/productIsAvailable";
 import FilterManagelist from "./FilterManagelist";
 import { EyeOffIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
@@ -5,7 +6,7 @@ const AllProductTable = ({ shopAllProduct }) => {
   const products = Array.isArray(shopAllProduct) ? shopAllProduct : [];
   const getStatusClasses = (status) => {
     if (status === "In Stock") return "bg-green-100 text-green-700";
-    if (status === "Pre-Order") return "bg-yellow-100 text-yellow-700";
+    if (status === "Low Stock") return "bg-yellow-100 text-yellow-700";
     return "bg-red-100 text-red-700";
   };
 
@@ -21,7 +22,7 @@ const AllProductTable = ({ shopAllProduct }) => {
           </tr>
         ) : (
           products.map((product) => {
-            const status = product?.availability || "In Stock";
+            const status = productIsAvailable(product);
             const statusClasses = getStatusClasses(status);
             const mainImage = product?.images?.mainImage;
             const price =
