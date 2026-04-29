@@ -1,9 +1,33 @@
-import FilterManagelist from "@/components/managelist/FilterManagelist";
-import { EyeOffIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { getAllProducts } from "@/actions";
+import AllProductTable from "@/components/managelist/AllProductTable";
+import Pagination from "@/components/managelist/Pagination";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 import React from "react";
 
-const ManageListPage = () => {
+const ManageListPage = async ({ searchParams }) => {
+  const session = await auth();
+  const shopId = session?.user?.shopId;
+
+  const pageParam = Number(searchParams?.page ?? 1);
+  const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+  const limit = 10;
+
+  const shopAllProductData = await getAllProducts(shopId, page, limit);
+
+  const shopAllProduct = shopAllProductData?.data ?? [];
+  const pagination = shopAllProductData?.pagination ?? {
+    total: shopAllProduct.length,
+    page,
+    limit,
+    totalPages: 1,
+  };
+  const total = pagination.total ?? shopAllProduct.length;
+  const totalPages = pagination.totalPages ?? 1;
+  const currentPage = pagination.page ?? page;
+  const start = total === 0 ? 0 : (currentPage - 1) * limit + 1;
+  const end = total === 0 ? 0 : Math.min(currentPage * limit, total);
+
   return (
     <div className="w-full p-6">
       <div className="max-w-375 mx-auto">
@@ -69,211 +93,17 @@ const ManageListPage = () => {
 
         {/* <!-- Table --> */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-x-auto">
-          <table className="w-full text-sm text-left border-collapse">
-            <FilterManagelist />
-            <tbody className="divide-y divide-gray-200">
-              {/* <!-- Product 1 --> */}
-              <tr className="hover:bg-gray-50">
-                <td className="p-3 text-center">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">
-                    In Stock
-                  </span>
-                </td>
-                <td className="p-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100"
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                </td>
-                <td className="p-3">
-                  <div className="font-medium">
-                    Apple MacBook Pro 16" M2 Max
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    SKU: MBP-M2-16-1TB
-                  </div>
-                </td>
-                <td className="p-3 text-gray-600">Laptops & Computers</td>
-                <td className="p-3 text-gray-600">Apple</td>
-                <td className="p-3 font-bold">3,45,000</td>
-                <td className="p-3">
-                  <span className="text-green-600 font-bold">24</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Edit"
-                    >
-                      <PencilIcon className="w-4 h-4 text-amazon-blue" />
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Unpublish"
-                    >
-                      <EyeOffIcon className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Delete"
-                    >
-                      <Trash2Icon className="w-4 h-4 text-red-600" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {/* <!-- Product 3 --> */}
-              <tr className="hover:bg-gray-50">
-                <td className="p-3 text-center">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">
-                    Low Stock
-                  </span>
-                </td>
-                <td className="p-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100"
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                </td>
-                <td className="p-3">
-                  <div className="font-medium">Sony WH-1000XM5 Headphones</div>
-                  <div className="text-xs text-gray-500">
-                    SKU: SONY-WH1000XM5
-                  </div>
-                </td>
-                <td className="p-3 text-gray-600">Audio & Headphones</td>
-                <td className="p-3 text-gray-600">Sony</td>
-                <td className="p-3 font-bold">38,500</td>
-                <td className="p-3">
-                  <span className="text-yellow-600 font-bold">3</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Edit"
-                    >
-                      <i
-                        data-lucide="pencil"
-                        className="w-4 h-4 text-amazon-blue"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Unpublish"
-                    >
-                      <i
-                        data-lucide="eye-off"
-                        className="w-4 h-4 text-gray-600"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Delete"
-                    >
-                      <i
-                        data-lucide="trash-2"
-                        className="w-4 h-4 text-red-600"
-                      ></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {/* <!-- Product 5 --> */}
-              <tr className="hover:bg-gray-50">
-                <td className="p-3 text-center">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">
-                    Out of Stock
-                  </span>
-                </td>
-                <td className="p-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100"
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                </td>
-                <td className="p-3">
-                  <div className="font-medium">
-                    Logitech G502 Hero Gaming Mouse
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    SKU: LOG-G502-HERO
-                  </div>
-                </td>
-                <td className="p-3 text-gray-600">Gaming Accessories</td>
-                <td className="p-3 text-gray-600">Logitech</td>
-                <td className="p-3 font-bold">8,500</td>
-                <td className="p-3">
-                  <span className="text-red-600 font-bold">0</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Edit"
-                    >
-                      <i
-                        data-lucide="pencil"
-                        className="w-4 h-4 text-amazon-blue"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Publish"
-                    >
-                      <i
-                        data-lucide="eye"
-                        className="w-4 h-4 text-gray-600"
-                      ></i>
-                    </button>
-                    <button
-                      className="p-1.5 hover:bg-gray-100 rounded"
-                      title="Delete"
-                    >
-                      <i
-                        data-lucide="trash-2"
-                        className="w-4 h-4 text-red-600"
-                      ></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <AllProductTable shopAllProduct={shopAllProduct} />
         </div>
 
         {/* <!-- Pagination --> */}
-        <div className="mt-6 flex items-center justify-between text-sm text-gray-600">
-          <div>Showing 1-5 of 5 products</div>
-          <div className="flex gap-2">
-            <button
-              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
-              disabled
-            >
-              Previous
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded bg-amazon-yellow font-bold">
-              1
-            </button>
-            <button
-              className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
-              disabled
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <Pagination
+          start={start}
+          end={end}
+          total={total}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

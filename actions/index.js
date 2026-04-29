@@ -135,11 +135,26 @@ export const addNewProducts = async (shopId, formData) => {
   }
 };
 
-export const getAllProducts = async (shopId) => {
+export const getAllProducts = async (shopId, page = 1, limit = 10) => {
   try {
     await dbConnect();
-    const products = await Product.find({ shopId });
-    return { success: true, data: products };
+
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find({ shopId }).skip(skip).limit(limit);
+
+    const total = await Product.countDocuments({ shopId });
+
+    return {
+      success: true,
+      data: products,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   } catch (error) {
     console.error("Action Error:", error);
     return {
