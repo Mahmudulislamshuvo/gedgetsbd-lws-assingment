@@ -12,6 +12,11 @@ const ManageProcutsButtons = ({ product }) => {
     router.push(`/managelist/edit/${productId}`);
   };
 
+  const handleOpenDeleteModal = () => {
+    if (!productId) return;
+    router.push(`/managelist/delete/${productId}`);
+  };
+
   return (
     <div className="flex items-center justify-end gap-2">
       <button
@@ -24,7 +29,11 @@ const ManageProcutsButtons = ({ product }) => {
       <button className="p-1.5 hover:bg-gray-100 rounded" title="Unpublish">
         <EyeOffIcon className="w-4 h-4 text-gray-600" />
       </button>
-      <button className="p-1.5 hover:bg-gray-100 rounded" title="Delete">
+      <button
+        onClick={handleOpenDeleteModal}
+        className="p-1.5 hover:bg-gray-100 rounded"
+        title="Delete"
+      >
         <Trash2Icon className="w-4 h-4 text-red-600" />
       </button>
     </div>
