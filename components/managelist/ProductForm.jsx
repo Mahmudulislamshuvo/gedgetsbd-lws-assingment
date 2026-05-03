@@ -1,21 +1,30 @@
 "use client";
 
-import { addNewProducts } from "@/actions";
+import { addNewProducts, updateProduct } from "@/actions";
 import ImageComponent from "./ImageComponent";
-import ProductManageActionButton from "./ProductManageActionButton";
+import ProductManageActionButton from "./PublishProductButton";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-const ProductForm = ({ shopId, onClose }) => {
+const ProductForm = ({ shopId, onClose, product }) => {
   const router = useRouter();
   const [imageResetKey, setImageResetKey] = useState(0);
   const [isNavigating, startTransition] = useTransition();
+  const isEdit = Boolean(product?._id);
+  const productId = product?._id ? String(product._id) : "";
   const addProductWithShopId = addNewProducts.bind(null, shopId);
+  const updateProductWithId = updateProduct.bind(null, productId, shopId);
+  const initialSpecs = product?.specifications ?? {};
+  const initialImages = product?.images ?? {};
 
   const handleSubmit = async (formData) => {
-    const result = await addProductWithShopId(formData);
+    if (isEdit && !productId) return;
 
-    if (result?.success) {
+    const result = isEdit
+      ? await updateProductWithId(formData)
+      : await addProductWithShopId(formData);
+
+    if (!isEdit && result?.success) {
       setImageResetKey((prev) => prev + 1);
     }
 
@@ -32,9 +41,13 @@ const ProductForm = ({ shopId, onClose }) => {
     <div className="w-full p-6">
       <div className="mb-8 flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-normal">Add a Product</h1>
+          <h1 className="text-3xl font-normal">
+            {isEdit ? "Edit Product" : "Add a Product"}
+          </h1>
           <p className="text-sm text-gray-600">
-            Create a new listing for your gadget product.
+            {isEdit
+              ? "Update your product details."
+              : "Create a new listing for your gadget product."}
           </p>
         </div>
       </div>
@@ -58,6 +71,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="productName" // যুক্ত করা হয়েছে
                   placeholder="e.g., Apple MacBook Pro M2 - 16GB RAM"
+                  defaultValue={product?.productName || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                   required
                 />
@@ -66,6 +80,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 <label className="block text-sm font-bold mb-1">Category</label>
                 <select
                   name="category" // যুক্ত করা হয়েছে
+                  defaultValue={product?.category}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="Laptops & Computers">
@@ -90,6 +105,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 <label className="block text-sm font-bold mb-1">Brand</label>
                 <select
                   name="brand"
+                  defaultValue={product?.brand}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="Apple">Apple</option>
@@ -109,6 +125,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <select
                   name="condition"
+                  defaultValue={product?.condition}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="New">New</option>
@@ -124,6 +141,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 name="description"
                 rows="4"
                 placeholder="Describe your product features, specifications, and benefits..."
+                defaultValue={product?.description || ""}
                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 required
               ></textarea>
@@ -149,6 +167,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   name="price"
                   step="0.01"
                   placeholder="0.00"
+                  defaultValue={product?.price ?? ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                   required
                 />
@@ -161,6 +180,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="number"
                   name="stockQuantity"
                   placeholder="0"
+                  defaultValue={product?.stockQuantity ?? ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                   required
                 />
@@ -173,6 +193,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="sku"
                   placeholder="e.g., MBP-M2-16-1TB"
+                  defaultValue={product?.sku || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
               </div>
@@ -184,6 +205,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <select
                   name="availability"
+                  defaultValue={product?.availability}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="In Stock">In Stock</option>
@@ -197,6 +219,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 </label>
                 <select
                   name="warrantyPeriod"
+                  defaultValue={product?.warrantyPeriod}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
                   <option value="No Warranty">No Warranty</option>
@@ -211,7 +234,11 @@ const ProductForm = ({ shopId, onClose }) => {
         </div>
 
         {/* Step 3: Product Images */}
-        <ImageComponent resetKey={imageResetKey} />
+        <ImageComponent
+          resetKey={imageResetKey}
+          initialMainImage={initialImages?.mainImage || ""}
+          initialAdditionalImages={initialImages?.additionalImages || []}
+        />
 
         {/* Step 4: Specifications */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
@@ -230,6 +257,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="processor"
                   placeholder="e.g., Apple M2 Max"
+                  defaultValue={initialSpecs?.processor || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
               </div>
@@ -241,6 +269,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="ram"
                   placeholder="e.g., 32GB"
+                  defaultValue={initialSpecs?.ram || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
               </div>
@@ -252,6 +281,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="storage"
                   placeholder="e.g., 1TB SSD"
+                  defaultValue={initialSpecs?.storage || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
               </div>
@@ -263,6 +293,7 @@ const ProductForm = ({ shopId, onClose }) => {
                   type="text"
                   name="displaySize"
                   placeholder="e.g., 16 inch"
+                  defaultValue={initialSpecs?.displaySize || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 />
               </div>
@@ -275,6 +306,7 @@ const ProductForm = ({ shopId, onClose }) => {
                 rows="3"
                 name="specifications"
                 placeholder="Add any other technical details (Battery life, Connectivity, Ports, etc.)"
+                defaultValue={initialSpecs?.otherDetails || ""}
                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
               ></textarea>
             </div>
@@ -285,6 +317,8 @@ const ProductForm = ({ shopId, onClose }) => {
         <ProductManageActionButton
           onClose={onClose}
           isNavigating={isNavigating}
+          submitLabel={isEdit ? "Update Product" : "Publish Product"}
+          pendingLabel={isEdit ? "Updating..." : "Publishing..."}
         />
       </form>
     </div>

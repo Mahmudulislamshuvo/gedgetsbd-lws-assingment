@@ -10,15 +10,17 @@ const ManageListPage = async ({ searchParams }) => {
   const session = await auth();
   const shopId = session?.user?.shopId;
 
-  const pageParam = Number(searchParams?.page ?? 1);
+  const resolvedSearchParams = await searchParams;
+
+  const pageParam = Number(resolvedSearchParams?.page ?? 1);
   const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
   const limit = 10;
 
   const shopAllProductData = await getAllProducts(shopId, page, limit, {
-    status: searchParams?.status ?? "All",
-    category: searchParams?.category ?? "All Categories",
-    brand: searchParams?.brand ?? "All Brands",
-    searchTerm: searchParams?.searchTerm ?? "",
+    status: resolvedSearchParams?.status ?? "All",
+    category: resolvedSearchParams?.category ?? "All Categories",
+    brand: resolvedSearchParams?.brand ?? "All Brands",
+    searchTerm: resolvedSearchParams?.searchTerm ?? "",
   });
 
   // const shopAllProductData = await getAllProducts(shopId, page, limit);

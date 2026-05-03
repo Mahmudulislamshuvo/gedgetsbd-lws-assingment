@@ -8,7 +8,11 @@ const UPLOAD_PRESET = "my_gadget_shop";
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-const ImageComponent = ({ resetKey = 0 }) => {
+const ImageComponent = ({
+  resetKey = 0,
+  initialMainImage = "",
+  initialAdditionalImages = [],
+}) => {
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [additionalImagePreviews, setAdditionalImagePreviews] = useState([]);
   const [mainError, setMainError] = useState("");
@@ -29,6 +33,26 @@ const ImageComponent = ({ resetKey = 0 }) => {
   const mainPreviewRef = useRef(null);
   const additionalPreviewsRef = useRef([]);
   const hasMountedRef = useRef(false);
+  const hasInitializedRef = useRef(false);
+
+  useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
+    if (initialMainImage) {
+      setMainImagePreview(initialMainImage);
+      setMainImageUrl(initialMainImage);
+    }
+
+    if (Array.isArray(initialAdditionalImages)) {
+      const limitedImages = initialAdditionalImages.slice(0, 4);
+      const filledSlots = [0, 1, 2, 3].map(
+        (index) => limitedImages[index] || null,
+      );
+      setAdditionalImagePreviews(filledSlots);
+      setAdditionalImageUrls(filledSlots);
+    }
+  }, [initialMainImage, initialAdditionalImages]);
 
   useEffect(() => {
     mainPreviewRef.current = mainImagePreview;

@@ -135,6 +135,114 @@ export const addNewProducts = async (shopId, formData) => {
   }
 };
 
+export const getProductById = async (productId, shopId) => {
+  try {
+    await dbConnect();
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const product = await Product.findById(productId).lean();
+
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    if (shopId && product.shopId?.toString() !== shopId.toString()) {
+      return { success: false, error: "Unauthorized access" };
+    }
+
+    return {
+      success: true,
+      data: {
+        ...product,
+        _id: product._id.toString(),
+        shopId: product.shopId?.toString(),
+      },
+    };
+  } catch (error) {
+    console.error("Action Error:", error);
+    return {
+      success: false,
+      error: "Something went wrong fetching product",
+    };
+  }
+};
+
+export const updateProduct = async (productId, shopId, formData) => {
+  try {
+    if (!(formData instanceof FormData)) {
+      return { success: false, error: "Invalid form submission" };
+    }
+
+    await dbConnect();
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const existingProduct = await Product.findById(productId);
+
+    if (!existingProduct) {
+      return { success: false, error: "Product not found" };
+    }
+
+    if (shopId && existingProduct.shopId?.toString() !== shopId.toString()) {
+      return { success: false, error: "Unauthorized access" };
+    }
+
+    const rawAdditionalImages = formData.getAll("additionalImages");
+    const additionalImages = rawAdditionalImages.filter(
+      (url) => typeof url === "string" && url.trim() !== "",
+    );
+
+    const productData = {
+      productName: formData.get("productName"),
+      category: formData.get("category"),
+      brand: formData.get("brand"),
+      condition: formData.get("condition"),
+      description: formData.get("description"),
+      price: Number(formData.get("price")),
+      stockQuantity: Number(formData.get("stockQuantity")),
+      sku: formData.get("sku"),
+      availability: formData.get("availability"),
+      warrantyPeriod: formData.get("warrantyPeriod"),
+      images: {
+        mainImage: formData.get("mainImage") || "",
+        additionalImages,
+      },
+      specifications: {
+        processor: formData.get("processor"),
+        ram: formData.get("ram"),
+        storage: formData.get("storage"),
+        displaySize: formData.get("displaySize"),
+        otherDetails: formData.get("specifications"),
+      },
+    };
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $set: productData },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedProduct) {
+      return { success: false, error: "Failed to update product" };
+    }
+
+    revalidatePath("/managelist");
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(updatedProduct)),
+    };
+  } catch (error) {
+    console.error("Action Error:", error);
+    return { success: false, error: "Something went wrong" };
+  }
+};
+
 export const getAllProducts = async (
   shopId,
   page = 1,
@@ -168,7 +276,8 @@ export const getAllProducts = async (
     const products = await Product.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
     const total = await Product.countDocuments(query);
 
     if (!products) {
@@ -178,9 +287,15 @@ export const getAllProducts = async (
       };
     }
 
+    const safeProducts = products.map((product) => ({
+      ...product,
+      _id: product._id.toString(),
+      shopId: product.shopId?.toString(),
+    }));
+
     return {
       success: true,
-      data: products,
+      data: safeProducts,
       pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   } catch (error) {
@@ -189,5 +304,22 @@ export const getAllProducts = async (
       success: false,
       error: "Something went wrong fetching all products",
     };
+  }
+};
+
+export const deleteSingleProduct = async (productId) => {
+  try {
+    await dbConnect();
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const findProuct = await Product.findById(productId);
+
+    console.log(findProuct);
+    return;
+  } catch (error) {
+    console.log(error);
   }
 };
