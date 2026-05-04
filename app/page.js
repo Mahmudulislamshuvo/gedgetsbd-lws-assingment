@@ -21,10 +21,8 @@ const HomePage = () => {
 
         {/* <!-- Categories & Content Grid --> */}
         <div className="relative z-10 -mt-32 px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* <!-- Card 1 --> */}
-            <CategoryGridCard />
-          </div>
+          {/* <!-- Card 1 --> */}
+          <CategoryGridCard />
 
           {/* <!-- Featured Product Carousel (Horizontal Scroll) --> */}
           <div className="mt-8 bg-white p-6 shadow-sm">
