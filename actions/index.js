@@ -4,7 +4,15 @@ import { dbConnect } from "@/lib/dbConnect";
 import Product from "@/Models/productSchema";
 import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
+import getCloudinaryImagePublicId from "@/utils/getCloudinaryImagePublicId";
 import { revalidatePath } from "next/cache";
+import { v2 as cloudinary } from "cloudinary";
+
+const cloudinaryConfigured = cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function getProfileData(userId) {
   try {
@@ -317,9 +325,36 @@ export const deleteSingleProduct = async (productId) => {
 
     const findProuct = await Product.findById(productId);
 
-    console.log(findProuct);
-    return;
+    if (!findProuct) {
+      return { success: false, error: "Product not found" };
+    }
+    // deleting cloudinary images before deleting the product from database
+    if (cloudinaryConfigured) {
+      const mainPublicId = getCloudinaryImagePublicId(
+        findProuct?.images?.mainImage,
+      );
+
+      if (mainPublicId) {
+        await cloudinary.uploader.destroy(mainPublicId);
+      }
+
+      // additionalImages deleting loop
+      for (const imageUrl of findProuct?.images?.additionalImages || []) {
+        const additionalPublicId = getCloudinaryImagePublicId(imageUrl);
+        if (additionalPublicId) {
+          await cloudinary.uploader.destroy(additionalPublicId);
+        }
+      }
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+    if (!deletedProduct) {
+      return { success: false, error: "Failed to delete product" };
+    }
+    revalidatePath("/managelist");
+    return { success: true, message: "Product deleted successfully" };
   } catch (error) {
     console.log(error);
+    return { success: false, error: "Failed to delete product" };
   }
 };
