@@ -1,4 +1,4 @@
-import { getAllProducts } from "@/actions";
+import { getAllSinleProviderProducts } from "@/actions";
 import AllProductTable from "@/components/managelist/AllProductTable";
 import FilterManagelist from "@/components/managelist/FilterManagelist";
 import Pagination from "@/components/managelist/Pagination";
@@ -16,12 +16,17 @@ const ManageListPage = async ({ searchParams }) => {
   const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
   const limit = 10;
 
-  const shopAllProductData = await getAllProducts(shopId, page, limit, {
-    status: resolvedSearchParams?.status ?? "All",
-    category: resolvedSearchParams?.category ?? "All Categories",
-    brand: resolvedSearchParams?.brand ?? "All Brands",
-    searchTerm: resolvedSearchParams?.searchTerm ?? "",
-  });
+  const shopAllProductData = await getAllSinleProviderProducts(
+    shopId,
+    page,
+    limit,
+    {
+      status: resolvedSearchParams?.status ?? "All",
+      category: resolvedSearchParams?.category ?? "All Categories",
+      brand: resolvedSearchParams?.brand ?? "All Brands",
+      searchTerm: resolvedSearchParams?.searchTerm ?? "",
+    },
+  );
 
   // const shopAllProductData = await getAllProducts(shopId, page, limit);
 

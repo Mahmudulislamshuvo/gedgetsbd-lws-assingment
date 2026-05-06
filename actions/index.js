@@ -251,7 +251,7 @@ export const updateProduct = async (productId, shopId, formData) => {
   }
 };
 
-export const getAllProducts = async (
+export const getAllSinleProviderProducts = async (
   shopId,
   page = 1,
   limit = 10,
@@ -356,5 +356,104 @@ export const deleteSingleProduct = async (productId) => {
   } catch (error) {
     console.log(error);
     return { success: false, error: "Failed to delete product" };
+  }
+};
+
+export const getAllProducts = async (page = 1, limit = 10, filters = {}) => {
+  try {
+    await dbConnect();
+
+    const {
+      sort,
+      category,
+      brand,
+      minPrice,
+      maxPrice,
+      reviews,
+      availability,
+      condition,
+    } = filters;
+
+    let query = {};
+
+    const toArray = (value) =>
+      Array.isArray(value) ? value.filter(Boolean) : value ? [value] : [];
+
+    const categoryValues = toArray(category);
+    const brandValues = toArray(brand);
+    const conditionValues = toArray(condition);
+    const availabilityValues = toArray(availability);
+    const reviewValues = toArray(reviews)
+      .map((value) => Number(value))
+      .filter((value) => Number.isFinite(value));
+
+    // filtering logic
+    if (categoryValues.length) query.category = { $in: categoryValues };
+    if (brandValues.length) query.brand = { $in: brandValues };
+    if (conditionValues.length) query.condition = { $in: conditionValues };
+
+    // price filtering logic
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    // review rating filter
+    if (reviewValues.length) {
+      query.rating = { $gte: Math.max(...reviewValues) };
+    }
+
+    // availability filter
+    if (availabilityValues.length) {
+      const hasInStock = availabilityValues.includes("true");
+      const hasOutOfStock = availabilityValues.includes("false");
+      const availabilityLabels = availabilityValues.filter(
+        (value) => value !== "true" && value !== "false",
+      );
+
+      if (availabilityLabels.length) {
+        query.availability = { $in: availabilityLabels };
+      }
+
+      if (hasInStock && !hasOutOfStock) {
+        query.stockQuantity = { $gt: 0 };
+      } else if (hasOutOfStock && !hasInStock) {
+        query.stockQuantity = { $lte: 0 };
+      }
+    }
+
+    // sorting logic
+    const sortValue = Array.isArray(sort) ? sort[0] : sort;
+    let sortOptions = {};
+    if (sortValue === "Price: Low to High") sortOptions.price = 1;
+    else if (sortValue === "Price: High to Low") sortOptions.price = -1;
+    else if (sortValue === "Newest Arrivals") sortOptions.createdAt = -1;
+    else if (sortValue === "Avg. Customer Review") sortOptions.rating = -1;
+    else sortOptions.createdAt = -1; // Default sorting
+
+    // data query with pagination
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find(query)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // total count query without skip and limit for pagination
+    const totalCount = await Product.countDocuments(query);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(products)),
+      totalCount,
+      hasMore: skip + products.length < totalCount,
+    };
+
+    //
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong fetching products" };
   }
 };
