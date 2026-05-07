@@ -2,6 +2,8 @@ import React from "react";
 import FilterSectionProduct from "@/components/products/FilterSectionProduct";
 import ProductCardForProductPage from "@/components/products/ProductCardForProductPage";
 import { getAllProducts } from "@/actions";
+import SortingComponent from "@/components/products/SortingComponent";
+import NoProductsFound from "@/components/products/NoProductsFound";
 
 const ProductPage = async ({ searchParams }) => {
   const resolvedSearchParams = await searchParams;
@@ -18,7 +20,6 @@ const ProductPage = async ({ searchParams }) => {
   const availabilityValues = toArray(resolvedSearchParams?.availability);
 
   const filters = {
-    sort: resolvedSearchParams?.sort,
     category: categoryValues,
     brand: brandValues,
     minPrice: resolvedSearchParams?.minPrice,
@@ -50,16 +51,7 @@ const ProductPage = async ({ searchParams }) => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm">Sort by:</span>
-          <select
-            defaultValue={resolvedSearchParams?.sort ?? "Featured"}
-            className="text-sm bg-gray-100 border border-gray-300 rounded-md px-2 py-1 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#e77600]"
-          >
-            <option>Featured</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Avg. Customer Review</option>
-            <option>Newest Arrivals</option>
-          </select>
+          <SortingComponent resolvedSearchParams={resolvedSearchParams} />
         </div>
       </div>
 
@@ -70,7 +62,7 @@ const ProductPage = async ({ searchParams }) => {
         {/* --- Product Grid --- */}
         <div className="flex-1">
           {products.length === 0 ? (
-            <div className="text-sm text-gray-500">No products found.</div>
+            <NoProductsFound />
           ) : (
             <div className="space-y-4">
               {products.map((product) => (
