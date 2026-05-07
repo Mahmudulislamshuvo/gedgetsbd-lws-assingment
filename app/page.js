@@ -35,8 +35,8 @@ const HomePage = () => {
                 View All
               </Link>
             </div>
-
-            <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide">
+            <div className="pb-4">
+              {/* <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide"> */}
               {/* <!-- Product 1 --> */}
               <ProductCard />
             </div>

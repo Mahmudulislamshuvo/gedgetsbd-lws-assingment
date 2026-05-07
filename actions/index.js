@@ -457,3 +457,26 @@ export const getAllProducts = async (page = 1, limit = 10, filters = {}) => {
     return { success: false, error: "Something went wrong fetching products" };
   }
 };
+
+export const getShopDetails = async (shopId) => {
+  try {
+    await dbConnect();
+
+    if (!shopId) {
+      return { success: false, error: "Shop ID is required" };
+    }
+
+    const shop = await Shop.findById(shopId).lean();
+
+    if (!shop) {
+      return { success: false, error: "Shop not found" };
+    }
+
+    return { success: true, data: JSON.parse(JSON.stringify(shop)) };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Something went wrong fetching shop details",
+    };
+  }
+};
