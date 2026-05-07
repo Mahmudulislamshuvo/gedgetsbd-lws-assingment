@@ -1,3 +1,4 @@
+import { formatUrlText } from "@/utils/formatUrlText";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -40,7 +41,7 @@ const CategoryGridCard = () => {
         </div>
 
         <Link
-          href="/products"
+          href={`/products?category=${formatUrlText("Laptops & Computers")}&page=1`}
           className="text-blue-600 text-sm hover:underline hover:text-red-700 mt-auto"
         >
           See all laptops
@@ -62,7 +63,7 @@ const CategoryGridCard = () => {
         </div>
 
         <Link
-          href="/products"
+          href={`/products?category=${formatUrlText("Smartphones & Tablets")}&page=1`}
           className="text-blue-600 text-sm hover:underline hover:text-red-700 mt-auto"
         >
           Shop smartphones
@@ -84,7 +85,7 @@ const CategoryGridCard = () => {
         </div>
 
         <Link
-          href="/products"
+          href={`/products?category=${formatUrlText("Gaming Accessories")}&page=1`}
           className="text-blue-600 text-sm hover:underline hover:text-red-700 mt-auto"
         >
           Shop accessories

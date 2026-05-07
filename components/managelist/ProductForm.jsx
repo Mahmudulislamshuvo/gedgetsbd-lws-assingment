@@ -69,7 +69,7 @@ const ProductForm = ({ shopId, onClose, product }) => {
                 </label>
                 <input
                   type="text"
-                  name="productName" // যুক্ত করা হয়েছে
+                  name="productName"
                   placeholder="e.g., Apple MacBook Pro M2 - 16GB RAM"
                   defaultValue={product?.productName || ""}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
@@ -79,7 +79,7 @@ const ProductForm = ({ shopId, onClose, product }) => {
               <div>
                 <label className="block text-sm font-bold mb-1">Category</label>
                 <select
-                  name="category" // যুক্ত করা হয়েছে
+                  name="category"
                   defaultValue={product?.category}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
