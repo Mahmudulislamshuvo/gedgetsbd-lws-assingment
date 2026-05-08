@@ -1,6 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Providers from "./providers";
 import "./globals.css";
+import Navbar from "@/components/navbar/Navbar";
 
 export const metadata = {
   title: "Create Next App",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="text-amazon-text flex flex-col min-h-screen">
         <Providers>
+          <Navbar />
           {children}
           <Footer />
         </Providers>
