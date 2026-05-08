@@ -458,6 +458,19 @@ export const getAllProducts = async (page = 1, limit = 10, filters = {}) => {
   }
 };
 
+export const getAllShops = async (page = 1, limit = 10) => {
+  try {
+    await dbConnect();
+    const skip = (page - 1) * limit;
+    const shops = await Shop.find().skip(skip).limit(limit).lean();
+
+    return { success: true, data: JSON.parse(JSON.stringify(shops)) };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong fetching shops" };
+  }
+};
+
 export const getShopDetails = async (shopId) => {
   try {
     await dbConnect();

@@ -83,14 +83,14 @@ const ProductForm = ({ shopId, onClose, product }) => {
                   defaultValue={product?.category}
                   className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none focus:ring-1 focus:ring-amazon-blue focus:border-amazon-blue"
                 >
-                  <option value="Laptops & Computers">
-                    Laptops & Computers
-                  </option>
+                  <option value="Laptops">Laptops</option>
+                  <option value="Computers">Computers</option>
                   <option value="Smartphones & Tablets">
                     Smartphones & Tablets
                   </option>
                   <option value="Audio & Headphones">Audio & Headphones</option>
                   <option value="Gaming Accessories">Gaming Accessories</option>
+                  <option value="Accessories">Accessories</option>
                   <option value="Cameras & Photography">
                     Cameras & Photography
                   </option>
