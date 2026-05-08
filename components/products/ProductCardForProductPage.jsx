@@ -13,7 +13,7 @@ const ProductCardForProductPage = ({ product }) => {
 
   return (
     <Link
-      href="/details"
+      href={`/products/${product?._id}`}
       className="flex flex-col md:flex-row gap-4 p-4 border border-gray-300 rounded hover:shadow-md transition"
     >
       {/* Product Image */}
