@@ -458,6 +458,27 @@ export const getAllProducts = async (page = 1, limit = 10, filters = {}) => {
   }
 };
 
+export const getSingleProduct = async (productId) => {
+  try {
+    await dbConnect();
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const product = await Product.findById(productId).lean();
+
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    return { success: true, data: JSON.parse(JSON.stringify(product)) };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong fetching product" };
+  }
+};
+
 export const getAllShops = async (page = 1, limit = 10) => {
   try {
     await dbConnect();

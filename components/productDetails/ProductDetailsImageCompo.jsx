@@ -1,31 +1,74 @@
-const ProductDetailsImageCompo = () => {
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+
+const ProductDetailsImageCompo = ({ product }) => {
+  const images = product?.data?.images;
+
+  const [mainImage, setMainImage] = useState(images?.mainImage);
+
+  // Check if additional images are available (data exists in the list)
+  const hasAdditionalImages = images?.additionalImages?.length > 0;
+
   return (
-    <div class="lg:col-span-5 flex gap-4">
-      <div class="flex flex-col gap-2">
-        <button class="w-10 h-10 border border-amazon-secondary rounded overflow-hidden hover:shadow-md">
-          <img
-            src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=100"
-            class="w-full h-full object-cover"
+    <div className="lg:col-span-5 flex gap-4">
+      {hasAdditionalImages && (
+        <div className="flex flex-col gap-2 w-16 shrink-0">
+          <button
+            className={`w-14 h-14 border rounded overflow-hidden hover:shadow-md transition-all ${
+              mainImage === images?.mainImage
+                ? "border-[#e77600] ring-1 ring-[#e77600]"
+                : "border-gray-300"
+            }`}
+            onClick={() => setMainImage(images?.mainImage)}
+          >
+            <Image
+              src={images?.mainImage}
+              className="w-full h-full object-cover"
+              alt="Thumbnail"
+              width={56}
+              height={56}
+            />
+          </button>
+
+          {images?.additionalImages?.map((thumbnail, index) => (
+            <button
+              key={index}
+              className={`w-14 h-14 border rounded overflow-hidden hover:shadow-md transition-all ${
+                mainImage === thumbnail
+                  ? "border-[#e77600] ring-1 ring-[#e77600]"
+                  : "border-gray-300"
+              }`}
+              onClick={() => setMainImage(thumbnail)}
+            >
+              <Image
+                src={thumbnail}
+                className="w-full h-full object-cover"
+                alt={`Thumbnail ${index + 1}`}
+                width={56}
+                height={56}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* main image */}
+      <div className="flex-1 border border-gray-200 rounded bg-gray-50 relative aspect-square max-h-[500px] overflow-hidden">
+        {mainImage ? (
+          <Image
+            src={mainImage}
+            alt="Main Product Image"
+            fill
+            className="object-contain mix-blend-multiply p-4"
+            priority
           />
-        </button>
-        <button class="w-10 h-10 border border-gray-300 rounded overflow-hidden hover:shadow-md">
-          <img
-            src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=100"
-            class="w-full h-full object-cover"
-          />
-        </button>
-        <button class="w-10 h-10 border border-gray-300 rounded overflow-hidden hover:shadow-md">
-          <img
-            src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=100"
-            class="w-full h-full object-cover"
-          />
-        </button>
-      </div>
-      <div class="flex-1 border border-gray-200 rounded p-4 bg-gray-50">
-        <img
-          src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600"
-          class="w-full h-auto object-cover"
-        />
+        ) : (
+          <span className="flex h-full items-center justify-center text-gray-400">
+            No Image Available
+          </span>
+        )}
       </div>
     </div>
   );

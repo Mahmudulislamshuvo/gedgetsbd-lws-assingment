@@ -1,3 +1,5 @@
+import { Loader2 } from "lucide-react";
+
 export default function ProductDetailsLoading() {
   return (
     <div className="flex h-[400px] w-full items-center justify-center">
