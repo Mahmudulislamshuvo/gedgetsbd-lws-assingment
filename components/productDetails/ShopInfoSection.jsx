@@ -1,10 +1,14 @@
-const ShopInfoSection = () => {
+const ShopInfoSection = ({ shopInfo }) => {
+  console.log(shopInfo);
+
   return (
     <div id="shop-tab" className="tab-content">
       <h2 className="text-xl font-bold mb-4">Shop Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 className="font-bold mb-2">Official Apple Store</h3>
+          <h3 className="font-bold mb-2">
+            {shopInfo?.data?.name || "Official Apple Store"}
+          </h3>
           <p className="text-sm text-gray-600 mb-4">
             Authorized Apple reseller providing genuine products with official
             warranty.

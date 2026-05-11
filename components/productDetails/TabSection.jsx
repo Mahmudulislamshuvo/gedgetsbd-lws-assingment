@@ -5,7 +5,7 @@ import DescriptionSection from "./DescriptionSection";
 import ReviewsSection from "./ReviewsSection";
 import ShopInfoSection from "./ShopInfoSection";
 
-const TabSection = ({ product }) => {
+const TabSection = ({ product, shopInfo }) => {
   const [activeTab, setActiveTab] = useState("description");
 
   const switchTab = (tab) => {
@@ -39,7 +39,7 @@ const TabSection = ({ product }) => {
 
       {activeTab === "description" && <DescriptionSection product={product} />}
       {activeTab === "reviews" && <ReviewsSection />}
-      {activeTab === "shop" && <ShopInfoSection />}
+      {activeTab === "shop" && <ShopInfoSection shopInfo={shopInfo} />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { getSingleProduct } from "@/actions";
+import { getShopDetails, getSingleProduct } from "@/actions";
 import BreadCrumb from "@/components/common/BreadCrumb";
 import BuyBox from "@/components/productDetails/BuyBox";
 import ProductDetailsImageCompo from "@/components/productDetails/ProductDetailsImageCompo";
@@ -10,6 +10,8 @@ const ProductDetailsPage = async ({ params }) => {
   const { id } = params;
 
   const singleProduct = await getSingleProduct(id);
+  const shopId = singleProduct?.data?.shopId;
+  const shopInfo = shopId ? await getShopDetails(shopId) : null;
 
   return (
     <div>
@@ -29,7 +31,7 @@ const ProductDetailsPage = async ({ params }) => {
         </div>
 
         {/* <!-- Tabs Section --> */}
-        <TabSection product={singleProduct} />
+        <TabSection product={singleProduct} shopInfo={shopInfo} />
 
         {/* <!-- Related Products --> */}
         <RelatedProducts />
