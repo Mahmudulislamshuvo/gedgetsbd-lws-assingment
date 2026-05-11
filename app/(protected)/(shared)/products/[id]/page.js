@@ -22,14 +22,14 @@ const ProductDetailsPage = async ({ params }) => {
           <ProductDetailsImageCompo product={singleProduct} />
 
           {/* <!-- Center: Product Info --> */}
-          <ProductInfo />
+          <ProductInfo product={singleProduct} />
 
           {/* <!-- Right: Buy Box --> */}
           <BuyBox />
         </div>
 
         {/* <!-- Tabs Section --> */}
-        <TabSection />
+        <TabSection product={singleProduct} />
 
         {/* <!-- Related Products --> */}
         <RelatedProducts />

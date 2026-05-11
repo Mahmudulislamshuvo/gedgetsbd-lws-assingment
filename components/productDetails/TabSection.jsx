@@ -1,4 +1,4 @@
-const TabSection = () => {
+const TabSection = ({ product }) => {
   return (
     <div class="mt-12">
       <div class="border-b border-gray-300 mb-6">
@@ -28,12 +28,7 @@ const TabSection = () => {
       <div id="description-tab" class="tab-content">
         <h2 class="text-xl font-bold mb-4">Product Description</h2>
         <div class="prose max-w-none text-sm">
-          <p class="mb-4">
-            The Apple MacBook Pro 16" with M2 Max chip delivers groundbreaking
-            performance and amazing battery life. Whether you're compiling code,
-            editing 8K video, or working with massive 3D models, the M2 Max chip
-            handles it all with ease.
-          </p>
+          <p class="mb-4">{product?.data?.description}</p>
           <p class="mb-4">
             The stunning 16-inch Liquid Retina XDR display features Extreme
             Dynamic Range, over 1000 nits of brightness for HDR content, and pro

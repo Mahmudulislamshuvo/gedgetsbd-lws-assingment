@@ -55,7 +55,7 @@ const ProductDetailsImageCompo = ({ product }) => {
       )}
 
       {/* main image */}
-      <div className="flex-1 border border-gray-200 rounded bg-gray-50 relative aspect-square max-h-[500px] overflow-hidden">
+      <div className="flex-1 border border-gray-200 rounded bg-gray-50 relative aspect-square max-h-125 overflow-hidden">
         {mainImage ? (
           <Image
             src={mainImage}
