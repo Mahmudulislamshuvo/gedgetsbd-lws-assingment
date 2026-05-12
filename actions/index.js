@@ -492,6 +492,57 @@ export const getAllShops = async (page = 1, limit = 10) => {
   }
 };
 
+export const editShopDetails = async (shopId, formData) => {
+  try {
+    await dbConnect();
+    if (!shopId || !formData) {
+      return { success: false, error: "Shop ID and form data are required" };
+    }
+
+    // Remove internal/immutable fields that should not be updated
+    const { _id, __v, ownerId, createdAt, updatedAt, ...safeFormData } = formData;
+
+    const updateData = {
+      ...safeFormData,
+      establishedYear: safeFormData.establishedYear
+        ? Number(safeFormData.establishedYear)
+        : null,
+      employeeCount: safeFormData.employeeCount
+        ? Number(safeFormData.employeeCount)
+        : null,
+      partnerships: Array.isArray(safeFormData.partnerships)
+        ? safeFormData.partnerships
+        : String(safeFormData.partnerships || "")
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean),
+    };
+
+    const shop = await Shop.findByIdAndUpdate(
+      shopId,
+      { $set: updateData },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).lean();
+
+    if (!shop) {
+      return { success: false, error: "Shop not found" };
+    }
+
+    revalidatePath("/profile");
+    console.log(shop);
+    return { success: true, data: JSON.parse(JSON.stringify(shop)) };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Something went wrong editing shop details",
+    };
+  }
+};
+
 export const getShopDetails = async (shopId) => {
   try {
     await dbConnect();

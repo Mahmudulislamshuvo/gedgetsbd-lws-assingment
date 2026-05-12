@@ -13,6 +13,28 @@ const ShopSchema = new Schema(
       required: true,
       unique: true,
     },
+
+    ownerName: {
+      type: String,
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      // required: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+      // required: true,
+    },
+    specialization: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     description: {
       type: String,
       default: "",
@@ -31,6 +53,11 @@ const ShopSchema = new Schema(
       default: "",
       trim: true,
     },
+    address: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     isVerified: {
       type: Boolean,
       default: false,
@@ -38,6 +65,23 @@ const ShopSchema = new Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    establishedYear: {
+      type: Number,
+      default: null,
+    },
+    employeeCount: {
+      type: Number,
+      default: null,
+    },
+    partnerships: {
+      type: [String],
+      default: [],
+    },
+    website: {
+      type: String,
+      default: "",
+      trim: true,
     },
   },
   {

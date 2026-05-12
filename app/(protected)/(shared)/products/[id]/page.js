@@ -15,7 +15,7 @@ const ProductDetailsPage = async ({ params }) => {
 
   return (
     <div>
-      <div className="flex-1 max-w-[1500px] mx-auto w-full p-4">
+      <div className="flex-1 max-w-375 mx-auto w-full p-4">
         {/* <!-- Breadcrumbs --> */}
         <BreadCrumb />
 

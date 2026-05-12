@@ -3,7 +3,6 @@ import { getToken } from "next-auth/jwt";
 
 // only for customer routes
 const customerRoutes = [
-  "/profile",
   "/cart",
   "/checkout",
   "/orderlist",
@@ -15,7 +14,13 @@ const customerRoutes = [
 const shopOwnerRoutes = ["/create", "/managelist"];
 
 // shared routes for both logged-in user types
-const sharedRoutes = ["/products", "/details", "/shop-profile", "/shops"];
+const sharedRoutes = [
+  "/profile",
+  "/products",
+  "/details",
+  "/shop-profile",
+  "/shops",
+];
 
 // only for public authentication routes (logged-in users cannot access these)
 const publicAuthRoutes = ["/login", "/register"];
