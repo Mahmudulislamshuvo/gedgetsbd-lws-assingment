@@ -2,7 +2,8 @@ import ShopCard from "@/components/shops/ShopCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 
-const ShopsPage = () => {
+const ShopsPage = ({ searchParams }) => {
+  const brandFilter = searchParams?.brands;
   return (
     <div className="max-w-375 mx-auto w-full p-4 py-8">
       <div className="mb-6">
@@ -14,7 +15,7 @@ const ShopsPage = () => {
       </div>
 
       {/* <!-- Shops Grid --> */}
-      <ShopCard />
+      <ShopCard brand={brandFilter} />
 
       {/* <!-- Pagination --> */}
       <div className="flex items-center justify-center gap-2 mt-8">
@@ -22,7 +23,7 @@ const ShopsPage = () => {
           className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled
         >
-          <ChevronLeft classNameName="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" />
         </button>
         <button className="px-4 py-2 bg-amazon-yellow border border-amazon-secondary rounded-md text-sm font-bold">
           1
@@ -37,7 +38,7 @@ const ShopsPage = () => {
           4
         </button>
         <button className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-          <ChevronRight classNameName="w-4 h-4" />
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </div>

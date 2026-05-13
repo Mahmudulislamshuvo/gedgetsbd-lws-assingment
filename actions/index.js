@@ -479,13 +479,31 @@ export const getSingleProduct = async (productId) => {
   }
 };
 
-export const getAllShops = async (page = 1, limit = 10) => {
+export const getAllShops = async (page = 1, limit = 10, bybrand) => {
   try {
     await dbConnect();
     const skip = (page - 1) * limit;
-    const shops = await Shop.find().skip(skip).limit(limit).lean();
 
-    return { success: true, data: JSON.parse(JSON.stringify(shops)) };
+    const query = {};
+
+    if (bybrand) {
+      const brandValue = String(bybrand).trim();
+      if (brandValue) {
+        query.partnerships = {
+          $elemMatch: { $regex: `^${brandValue}$`, $options: "i" },
+        };
+      }
+    }
+
+    const shops = await Shop.find(query).skip(skip).limit(limit).lean();
+
+    const totalCount = await Shop.countDocuments(query);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(shops)),
+      totalCount,
+    };
   } catch (error) {
     console.log(error);
     return { success: false, error: "Something went wrong fetching shops" };
