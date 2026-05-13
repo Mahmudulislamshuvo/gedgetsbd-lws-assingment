@@ -27,7 +27,11 @@ const ShopProfile = async ({ searchParams }) => {
       {mode === "view" ? (
         <ShopProfileViewMode shopDetails={shopDetails?.data} />
       ) : (
-        <EditShopProfile shopId={shopId} shopDetails={shopDetails?.data} />
+        <EditShopProfile
+          shopId={shopId}
+          shopDetails={shopDetails?.data}
+          searchParams={resolvedSearchParams}
+        />
       )}
     </div>
   );

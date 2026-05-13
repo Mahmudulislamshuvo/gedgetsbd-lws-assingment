@@ -6,10 +6,6 @@ import { auth } from "@/lib/auth";
 const ProfilePage = async ({ searchParams }) => {
   const session = await auth();
 
-  console.log(session);
-
-  const shopId = session?.user?.shopId;
-
   return (
     <>
       {session?.user?.userType === "customer" ? (

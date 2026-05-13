@@ -3,9 +3,11 @@
 import { editShopDetails } from "@/actions";
 import { useEffect, useState } from "react";
 import ShopProfileImage from "./ShopProfileImage";
+import { useRouter } from "next/navigation";
 
 const EditShopProfile = ({ shopId, shopDetails }) => {
   const [formData, setFormData] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
     if (!shopDetails) return;
@@ -39,7 +41,9 @@ const EditShopProfile = ({ shopId, shopDetails }) => {
 
     const res = await editShopDetails(shopId, formData);
 
-    console.log(res);
+    if (res.success === true) {
+      router.push("/profile");
+    }
   };
 
   return (
@@ -186,8 +190,8 @@ const EditShopProfile = ({ shopId, shopDetails }) => {
           </div>
         </div>
 
-        {/* */}
-        <ShopProfileImage />
+        {/* Image sections */}
+        <ShopProfileImage shopDetails={shopDetails} />
 
         {/*additionals details */}
         <div className="bg-white border border-gray-300 rounded shadow-sm overflow-hidden">
@@ -258,11 +262,12 @@ const EditShopProfile = ({ shopId, shopDetails }) => {
           </div>
         </div>
 
-        {/* */}
+        {/* action buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4">
           <button
             type="button"
             id="cancelEditBtn"
+            onClick={() => router.push("/profile")}
             className="px-6 py-2 border border-gray-400 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Cancel

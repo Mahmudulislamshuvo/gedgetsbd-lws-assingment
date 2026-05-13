@@ -1,4 +1,5 @@
 import { CheckCircle } from "lucide-react";
+import Image from "next/image";
 
 const ShopProfileViewMode = ({ shopDetails }) => {
   const details = shopDetails || {};
@@ -28,11 +29,16 @@ const ShopProfileViewMode = ({ shopDetails }) => {
           {/* <!-- Shop Card Preview --> */}
           <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-sm overflow-hidden shadow-md">
             <div className="h-48 overflow-hidden bg-linear-to-br from-blue-50 to-blue-100">
-              <img
+              <Image
                 id="previewBanner"
-                src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600"
+                src={
+                  details.logo ||
+                  "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600"
+                }
                 className="w-full h-full object-cover"
                 alt="Shop Banner"
+                width={600}
+                height={200}
               />
             </div>
             <div className="p-4">

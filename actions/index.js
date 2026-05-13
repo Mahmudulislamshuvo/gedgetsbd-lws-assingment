@@ -499,8 +499,8 @@ export const editShopDetails = async (shopId, formData) => {
       return { success: false, error: "Shop ID and form data are required" };
     }
 
-    // Remove internal/immutable fields that should not be updated
-    const { _id, __v, ownerId, createdAt, updatedAt, ...safeFormData } = formData;
+    const { _id, __v, ownerId, createdAt, updatedAt, ...safeFormData } =
+      formData;
 
     const updateData = {
       ...safeFormData,
@@ -532,7 +532,6 @@ export const editShopDetails = async (shopId, formData) => {
     }
 
     revalidatePath("/profile");
-    console.log(shop);
     return { success: true, data: JSON.parse(JSON.stringify(shop)) };
   } catch (error) {
     console.log(error);
@@ -562,6 +561,67 @@ export const getShopDetails = async (shopId) => {
     return {
       success: false,
       error: "Something went wrong fetching shop details",
+    };
+  }
+};
+
+export const uploadNewShopAvatar = async (shopId, formData) => {
+  try {
+    await dbConnect();
+
+    const imageFile = formData.get("image");
+    const oldImageUrl = formData.get("oldImageUrl");
+
+    if (!shopId || !imageFile) {
+      return { success: false, error: "Shop ID and image file are required" };
+    }
+
+    if (!cloudinaryConfigured) {
+      return { success: false, error: "Cloudinary is not configured" };
+    }
+
+    if (oldImageUrl && !oldImageUrl.includes("unsplash.com")) {
+      const oldPublicId = getCloudinaryImagePublicId(oldImageUrl);
+      //not neccesary but good to have this check before deleting any image from cloudinary
+      if (oldPublicId) {
+        await cloudinary.uploader.destroy(oldPublicId);
+      }
+    }
+
+    const arrayBuffer = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "shop-avatars" },
+        (error, result) => {
+          if (error) return reject(error);
+          return resolve(result);
+        },
+      );
+
+      uploadStream.end(buffer);
+    });
+
+    const imageUrl = uploadResult?.secure_url || uploadResult?.url;
+    if (!imageUrl) {
+      return { success: false, error: "Image upload failed" };
+    }
+
+    const updatedShop = await Shop.findByIdAndUpdate(
+      shopId,
+      { $set: { logo: imageUrl } },
+      { new: true, runValidators: true },
+    ).lean();
+
+    revalidatePath("/profile");
+
+    return { success: true, data: JSON.parse(JSON.stringify(updatedShop)) };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Something went wrong uploading new shop avatar",
     };
   }
 };
