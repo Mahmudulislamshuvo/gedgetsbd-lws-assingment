@@ -1,9 +1,27 @@
+import { getAllShops } from "@/actions";
+import Pagination from "@/components/shops/Pagination";
 import ShopCard from "@/components/shops/ShopCard";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
 
-const ShopsPage = ({ searchParams }) => {
-  const brandFilter = searchParams?.brands;
+const ShopsPage = async ({ searchParams }) => {
+  const brandParam = searchParams?.brands;
+  const brandFilter = Array.isArray(brandParam) ? brandParam[0] : brandParam;
+  const pageParam = Number(searchParams?.page || 1);
+  const limit = 6;
+
+  const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
+
+  const { data: shops = [], totalCount = 0 } = await getAllShops(
+    page,
+    limit,
+    brandFilter,
+  );
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+
+  const query = {};
+  if (brandFilter) {
+    query.brands = brandFilter;
+  }
+
   return (
     <div className="max-w-375 mx-auto w-full p-4 py-8">
       <div className="mb-6">
@@ -15,32 +33,10 @@ const ShopsPage = ({ searchParams }) => {
       </div>
 
       {/* <!-- Shops Grid --> */}
-      <ShopCard brand={brandFilter} />
+      <ShopCard shops={shops} />
 
       {/* <!-- Pagination --> */}
-      <div className="flex items-center justify-center gap-2 mt-8">
-        <button
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <button className="px-4 py-2 bg-amazon-yellow border border-amazon-secondary rounded-md text-sm font-bold">
-          1
-        </button>
-        <button className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-          2
-        </button>
-        <button className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-          3
-        </button>
-        <button className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-          4
-        </button>
-        <button className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
+      <Pagination currentPage={page} totalPages={totalPages} query={query} />
     </div>
   );
 };

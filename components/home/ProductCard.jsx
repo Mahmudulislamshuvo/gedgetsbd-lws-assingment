@@ -15,7 +15,7 @@ const ProductCard = async () => {
 
         return (
           <div className="flex-none w-48">
-            <Link href={`products/${product.id}`} className="block">
+            <Link href={`products/${product._id}`} className="block">
               <div className="bg-gray-50 h-48 flex items-center justify-center mb-2 p-2">
                 <Image
                   src={product.images.mainImage}

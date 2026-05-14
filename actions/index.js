@@ -479,6 +479,35 @@ export const getSingleProduct = async (productId) => {
   }
 };
 
+export const getProductbyCategory = async (
+  category,
+  prevProductId,
+  limit = 5,
+) => {
+  try {
+    await dbConnect();
+
+    if (!category) {
+      return { success: false, error: "Category is required" };
+    }
+    const query = { category: category };
+
+    if (prevProductId) {
+      query._id = { $ne: prevProductId };
+    }
+
+    const products = await Product.find(query).limit(limit).lean();
+
+    return { success: true, data: JSON.parse(JSON.stringify(products)) };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Something went wrong fetching products by category",
+    };
+  }
+};
+
 export const getAllShops = async (page = 1, limit = 10, bybrand) => {
   try {
     await dbConnect();

@@ -1,9 +1,15 @@
 import { getShopDetails } from "@/actions";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 
 const ProductInfo = async ({ product }) => {
-  const shopdetails = await getShopDetails(product?.data?.shopId);
-  const productSpecifications = Object.values(product?.data?.specifications);
+  const session = await auth();
+  const shopId = session?.user?.shopId;
+  const shopdetails = shopId ? await getShopDetails(shopId) : null;
+
+  const productSpecifications = Object.values(
+    product?.data?.specifications || {},
+  );
 
   return (
     <>
@@ -12,12 +18,16 @@ const ProductInfo = async ({ product }) => {
           <h1 className="text-2xl font-normal mb-2">{product?.data?.name}</h1>
           <p className="text-sm text-gray-600 mb-3">
             Visit the
-            <Link
-              href={`/shops/${product?.data?.shopId}`}
-              className="text-amazon-blue hover:underline"
-            >
-              {` ${shopdetails?.data?.name} Store`}
-            </Link>
+            {shopdetails?.data?.name ? (
+              <Link
+                href={`/shops/${shopId}`}
+                className="text-amazon-blue hover:underline"
+              >
+                {` ${shopdetails?.data?.name} Store`}
+              </Link>
+            ) : (
+              <span className="text-gray-500"> Shop not available</span>
+            )}
           </p>
 
           <div className="flex items-center gap-2 mb-4">

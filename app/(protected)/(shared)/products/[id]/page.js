@@ -34,7 +34,7 @@ const ProductDetailsPage = async ({ params }) => {
         <TabSection product={singleProduct} shopInfo={shopInfo} />
 
         {/* <!-- Related Products --> */}
-        <RelatedProducts />
+        <RelatedProducts singleProduct={singleProduct} />
       </div>
     </div>
   );
