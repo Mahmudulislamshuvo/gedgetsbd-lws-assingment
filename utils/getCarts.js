@@ -8,7 +8,7 @@ export const getUserCartItems = async () => {
 
     if (!userId) return [];
 
-    const cookiesStore = cookies();
+    const cookiesStore = await cookies();
     const cartCookie = cookiesStore.get("cart");
 
     if (!cartCookie?.value) return [];

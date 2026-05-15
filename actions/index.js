@@ -8,6 +8,7 @@ import getCloudinaryImagePublicId from "@/utils/getCloudinaryImagePublicId";
 import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
 import { cookies } from "next/headers";
+import { auth } from "@/lib/auth";
 
 const cloudinaryConfigured = cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -720,6 +721,59 @@ export const addTocart = async (productId, userId, quantity = 1) => {
   } catch (error) {
     console.log(error);
     return { success: false, error: "Something went wrong adding to cart" };
+  }
+};
+
+export const updateCartQuantity = async (productId, nextQuantity) => {
+  try {
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const cookiesStore = await cookies();
+    const existingCart = cookiesStore.get("cart");
+
+    if (!existingCart?.value) {
+      return { success: false, error: "Cart is empty" };
+    }
+
+    const cart = JSON.parse(existingCart.value);
+    const normalizedQuantity = Math.max(1, Number(nextQuantity) || 1);
+    let updated = false;
+
+    const updatedCart = cart.map((item) => {
+      if (item.productId === productId && item.userId === userId) {
+        updated = true;
+        return { ...item, quantity: normalizedQuantity };
+      }
+
+      return item;
+    });
+
+    if (!updated) {
+      return { success: false, error: "Cart item not found" };
+    }
+
+    cookiesStore.set("cart", JSON.stringify(updatedCart), {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    revalidatePath("/cart");
+
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong updating cart" };
   }
 };
 

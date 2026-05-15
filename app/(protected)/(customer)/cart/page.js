@@ -16,8 +16,6 @@ const CartPage = async () => {
     return total + (cartItem?.quantity || 1) * item.price;
   }, 0);
 
-  console.log(cartItemsTotalPrice);
-
   //
   return (
     <div className="max-w-375 mx-auto w-full p-4">
@@ -40,7 +38,7 @@ const CartPage = async () => {
           {/* */}
           <div className="bg-white">
             {existingCartItems.data?.map((item) => (
-              <CartItems key={item._id} item={item} />
+              <CartItems key={item._id} item={item} cartItems={cartItems} />
             ))}
 
             {/* */}

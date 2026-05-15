@@ -1,12 +1,15 @@
 import { getShopDetails } from "@/actions";
 import Image from "next/image";
+import QuantitySelector from "./QuantitySelector";
 
-const CartItems = async ({ item }) => {
+const CartItems = async ({ item, cartItems }) => {
   const shopDertails = await getShopDetails(item.shopId);
+  const cartItem = cartItems.find((ci) => ci.productId === item._id);
+  const initialQuantity = cartItem?.quantity || 1;
 
   return (
     <div className="p-4 border-b border-gray-300 flex gap-4 hover:bg-gray-50">
-      <div className="w-32 h-32 flex-shrink-0">
+      <div className="w-32 h-32 shrink-0">
         <Image
           src={item?.images?.mainImage || "/placeholder.png"}
           className="w-full h-full object-cover rounded border border-gray-200"
@@ -33,16 +36,10 @@ const CartItems = async ({ item }) => {
 
         <div className="flex items-center gap-4 mt-3">
           {/* Quantity Selector */}
-          <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-600">Qty:</label>
-            <select className="border border-gray-400 rounded-md px-2 py-1 text-sm bg-gray-50 outline-none focus:ring-1 focus:ring-amazon-blue">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </div>
+          <QuantitySelector
+            productId={item._id}
+            initialQuantity={initialQuantity}
+          />
 
           <span className="text-gray-300">|</span>
 
