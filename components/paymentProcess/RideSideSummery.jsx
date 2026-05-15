@@ -1,11 +1,9 @@
-const RideSideSummery = () => {
+const RideSideSummery = ({ userInfo }) => {
   return (
-    <div class="w-full lg:w-[300px]">
+    <div class="w-full lg:w-75">
       <div class="box p-4 sticky top-10">
         <button
-          onclick="
-                            document.getElementById('paymentForm').submit()
-                        "
+          onclick="document.getElementById('paymentForm').submit()"
           class="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
         >
           Place your order

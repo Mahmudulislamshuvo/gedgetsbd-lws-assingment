@@ -93,10 +93,11 @@ const CustomerPersonalDetailsCard = ({ initialData }) => {
                 name="name"
                 disabled={!isEditing}
                 className="font-medium border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={customerData.name || "John Doe"}
+                value={customerData.name}
                 onChange={(e) =>
                   setCustomerData({ ...customerData, name: e.target.value })
                 }
+                placeholder="Full name"
               />
             </div>
             <div>
