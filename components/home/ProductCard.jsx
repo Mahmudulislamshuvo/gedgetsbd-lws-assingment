@@ -2,8 +2,12 @@ import { getAllProducts, getShopDetails } from "@/actions";
 import Link from "next/link";
 import SwiperSlider from "../common/SwiperSlider";
 import Image from "next/image";
+import AddtoCartBtn from "./AddtoCartBtn";
+import { auth } from "@/lib/auth";
 
 const ProductCard = async () => {
+  const session = await auth();
+
   const newarrivalProducts = await getAllProducts(1, 10, {
     sort: "Newest Arrivals",
   });
@@ -38,9 +42,7 @@ const ProductCard = async () => {
               </span>
             </div>
             <div className="text-xs text-gray-500 mb-2">Get it by Tomorrow</div>
-            <button className="w-full bg-amazon-yellow hover:bg-amazon-yellow_hover text-sm py-1.5 rounded-md shadow-sm font-medium border border-amazon-secondary transition-colors">
-              Add to Cart
-            </button>
+            <AddtoCartBtn productId={product._id} userId={session?.user?.id} />
           </div>
         );
       })}

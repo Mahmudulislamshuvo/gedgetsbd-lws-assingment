@@ -12,6 +12,8 @@ const nextConfig = {
       },
     ],
   },
+  // Prevent Vercel from trying to bundle native Node.js modules
+  serverExternalPackages: ["mongoose", "bcryptjs"],
 };
 
 export default nextConfig;

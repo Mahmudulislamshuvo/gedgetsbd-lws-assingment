@@ -7,6 +7,7 @@ import User from "@/Models/userSchema";
 import getCloudinaryImagePublicId from "@/utils/getCloudinaryImagePublicId";
 import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
+import { cookies } from "next/headers";
 
 const cloudinaryConfigured = cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -670,5 +671,70 @@ export const uploadNewShopAvatar = async (shopId, formData) => {
       success: false,
       error: "Something went wrong uploading new shop avatar",
     };
+  }
+};
+
+export const addTocart = async (productId, userId, quantity = 1) => {
+  try {
+    await dbConnect();
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const product = await Product.findById(productId).lean();
+
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    const cookiesStore = await cookies();
+    const existingCart = cookiesStore.get("cart");
+    let cart = existingCart ? JSON.parse(existingCart.value) : [];
+
+    const existingProductIndex = cart.findIndex(
+      (item) => item.productId === productId,
+    );
+
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += quantity;
+    } else {
+      cart.push({
+        productId: productId,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+        userId,
+      });
+    }
+
+    cookiesStore.set("cart", JSON.stringify(cart), {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return { success: true, message: "Added to cart successfully!" };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong adding to cart" };
+  }
+};
+
+export const getProductsByIds = async (productIds) => {
+  await dbConnect();
+  try {
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+      return { success: false, error: "Product IDs must be a non-empty array" };
+    }
+
+    const products = await Product.find({ _id: { $in: productIds } }).lean();
+
+    return { success: true, data: JSON.parse(JSON.stringify(products)) };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: "Something went wrong fetching products" };
   }
 };

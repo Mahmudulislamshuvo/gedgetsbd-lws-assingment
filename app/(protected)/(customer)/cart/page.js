@@ -1,34 +1,24 @@
-"use client";
-
 import CartItems from "@/components/cart/CartItems";
+
 import Link from "next/link";
+import { getUserCartItems } from "@/utils/getCarts";
+import { getProductsByIds } from "@/actions";
 
-const cartItems = [
-  {
-    id: 1,
-    title: 'Apple MacBook Pro 16" M2 Max - 32GB RAM, 1TB SSD',
-    image: "https://images.unsplash.com/photo-1517336712461-481140081023?w=300",
-    price: "৳3,45,000",
-    stockStatus: "In Stock",
-    seller: "Official Apple Store",
-    shipping: "Eligible for FREE Shipping",
-    qty: 1,
-    link: "/details",
-  },
-  {
-    id: 2,
-    title: "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
-    image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=300",
-    price: "৳35,000",
-    stockStatus: "Only 2 left in stock",
-    seller: "Gadgets BD",
-    shipping: "Eligible for FREE Shipping",
-    qty: 2,
-    link: "/details",
-  },
-];
+const CartPage = async () => {
+  const cartItems = await getUserCartItems();
 
-const CartPage = () => {
+  const existingCartItems = await getProductsByIds(
+    cartItems.map((item) => item.productId),
+  );
+
+  const cartItemsTotalPrice = existingCartItems?.data?.reduce((total, item) => {
+    const cartItem = cartItems.find((ci) => ci.productId === item._id);
+    return total + (cartItem?.quantity || 1) * item.price;
+  }, 0);
+
+  console.log(cartItemsTotalPrice);
+
+  //
   return (
     <div className="max-w-375 mx-auto w-full p-4">
       <div className="flex flex-col lg:flex-row gap-4">
@@ -49,15 +39,17 @@ const CartPage = () => {
 
           {/* */}
           <div className="bg-white">
-            {cartItems.map((item) => (
-              <CartItems key={item.id} item={item} />
+            {existingCartItems.data?.map((item) => (
+              <CartItems key={item._id} item={item} />
             ))}
 
             {/* */}
             <div className="p-4 text-right">
               <p className="text-lg">
                 Subtotal ({cartItems.length} items):{" "}
-                <span className="font-bold text-amazon-orange">৳3,80,000</span>
+                <span className="font-bold text-amazon-orange">
+                  ৳{cartItemsTotalPrice?.toLocaleString()}
+                </span>
               </p>
             </div>
           </div>
@@ -91,12 +83,12 @@ const CartPage = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => router.push("/paymentProcess")}
-              className="w-full py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors mb-2"
+            <Link
+              href="/paymentProcess"
+              className="w-full py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors mb-2 text-center block"
             >
               Proceed to Checkout
-            </button>
+            </Link>
 
             <div className="text-xs text-gray-600 mt-4">
               <p className="mb-2">
