@@ -770,10 +770,54 @@ export const updateCartQuantity = async (productId, nextQuantity) => {
 
     revalidatePath("/cart");
 
-    return { success: true };
+    return { success: true, message: "Cart quantity updated successfully" };
   } catch (error) {
     console.log(error);
     return { success: false, error: "Something went wrong updating cart" };
+  }
+};
+
+export const removeSingleItemFromCart = async (productId) => {
+  try {
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    if (!productId) {
+      return { success: false, error: "Product ID is required" };
+    }
+
+    const cookiesStore = await cookies();
+    const existingCart = cookiesStore.get("cart");
+    if (!existingCart?.value) {
+      return { success: false, error: "Cart is empty" };
+    }
+
+    const cart = JSON.parse(existingCart.value);
+
+    const updatedCart = cart.filter(
+      (item) => !(item.productId === productId && item.userId === userId),
+    );
+
+    cookiesStore.set("cart", JSON.stringify(updatedCart), {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    revalidatePath("/cart");
+
+    return { success: true, message: "Item removed from cart successfully" };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Something went wrong removing item from cart",
+    };
   }
 };
 
@@ -786,7 +830,10 @@ export const getProductsByIds = async (productIds) => {
 
     const products = await Product.find({ _id: { $in: productIds } }).lean();
 
-    return { success: true, data: JSON.parse(JSON.stringify(products)) };
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(products)),
+    };
   } catch (error) {
     console.log(error);
     return { success: false, error: "Something went wrong fetching products" };

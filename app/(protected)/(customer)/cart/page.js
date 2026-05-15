@@ -3,6 +3,7 @@ import CartItems from "@/components/cart/CartItems";
 import Link from "next/link";
 import { getUserCartItems } from "@/utils/getCarts";
 import { getProductsByIds } from "@/actions";
+import { ShieldCheck, Truck } from "lucide-react";
 
 const CartPage = async () => {
   const cartItems = await getUserCartItems();
@@ -20,7 +21,7 @@ const CartPage = async () => {
   return (
     <div className="max-w-375 mx-auto w-full p-4">
       <div className="flex flex-col lg:flex-row gap-4">
-        {/* */}
+        {/* left side cart items */}
         <div className="flex-1">
           {/* */}
           <div className="bg-white p-4 mb-4 border-b border-gray-300">
@@ -53,7 +54,7 @@ const CartPage = async () => {
           </div>
         </div>
 
-        {/* */}
+        {/* right side checkout options */}
         <div className="lg:w-80">
           <div className="bg-white p-4 border border-gray-300 rounded">
             <div className="mb-4">
@@ -70,8 +71,10 @@ const CartPage = async () => {
 
             <div className="mb-4">
               <p className="text-lg mb-1">
-                Subtotal ({cartItems.length} items):{" "}
-                <span className="font-bold text-amazon-orange">৳3,80,000</span>
+                Subtotal ({cartItems.length} items):
+                <span className="font-bold text-amazon-orange">
+                  ৳{cartItemsTotalPrice?.toLocaleString()}
+                </span>
               </p>
               <div className="flex items-start gap-2 text-xs">
                 <input type="checkbox" id="gift" className="mt-0.5" />
@@ -82,7 +85,7 @@ const CartPage = async () => {
             </div>
 
             <Link
-              href="/paymentProcess"
+              href="/payment-process"
               className="w-full py-2 bg-amazon-yellow hover:bg-amazon-yellow_hover border border-amazon-secondary rounded-md text-sm font-bold shadow-sm transition-colors mb-2 text-center block"
             >
               Proceed to Checkout
@@ -90,14 +93,11 @@ const CartPage = async () => {
 
             <div className="text-xs text-gray-600 mt-4">
               <p className="mb-2">
-                <i
-                  data-lucide="shield-check"
-                  className="w-3 h-3 inline mr-1"
-                ></i>
+                <ShieldCheck className="w-3 h-3 inline mr-1" />
                 Secure transaction
               </p>
               <p>
-                <i data-lucide="truck" className="w-3 h-3 inline mr-1"></i>
+                <Truck className="w-3 h-3 inline mr-1" />
                 Ships from Gadgets BD
               </p>
             </div>

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateCartQuantity } from "@/actions";
 
-const QuantitySelector = ({ productId, initialQuantity }) => {
+const QuantitySelector = ({ productId, initialQuantity = 1 }) => {
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isPending, startTransition] = useTransition();
 

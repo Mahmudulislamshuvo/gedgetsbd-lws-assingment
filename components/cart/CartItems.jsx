@@ -1,6 +1,7 @@
 import { getShopDetails } from "@/actions";
 import Image from "next/image";
 import QuantitySelector from "./QuantitySelector";
+import DeleteBtn from "./DeleteBtn";
 
 const CartItems = async ({ item, cartItems }) => {
   const shopDertails = await getShopDetails(item.shopId);
@@ -44,9 +45,7 @@ const CartItems = async ({ item, cartItems }) => {
           <span className="text-gray-300">|</span>
 
           {/* Delete Button */}
-          <button className="text-sm text-amazon-blue hover:text-amazon-orange hover:underline">
-            Delete
-          </button>
+          <DeleteBtn item={item} />
 
           <span className="text-gray-300">|</span>
 
