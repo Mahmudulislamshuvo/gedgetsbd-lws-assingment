@@ -8,6 +8,7 @@ const customerRoutes = [
   "/orderlist",
   "/reviewmodal",
   "/success",
+  "/payment",
 ];
 
 // only for shop owner routes
@@ -24,6 +25,13 @@ const sharedRoutes = [
 
 // only for public authentication routes (logged-in users cannot access these)
 const publicAuthRoutes = ["/login", "/register"];
+
+// public payment callback pages (should not force login)
+const publicPaymentRoutes = [
+  "/payment/success",
+  "/payment/fail",
+  "/payment/cancel",
+];
 
 export async function middleware(request) {
   const { pathname, search } = request.nextUrl;
@@ -48,6 +56,14 @@ export async function middleware(request) {
   const isPublicAuthRoute = publicAuthRoutes.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
+
+  const isPublicPaymentRoute = publicPaymentRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + "/"),
+  );
+
+  if (isPublicPaymentRoute) {
+    return NextResponse.next();
+  }
 
   const isSharedRoute = sharedRoutes.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
@@ -92,6 +108,7 @@ export const config = {
     "/checkout/:path*",
     "/reviewmodal/:path*",
     "/success/:path*",
+    "/payment/:path*",
 
     /* Shop Owner routes */
     "/create/:path*",

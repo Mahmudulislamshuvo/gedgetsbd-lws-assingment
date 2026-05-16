@@ -4,6 +4,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import Product from "@/Models/productSchema";
 import Shop from "@/Models/shopSchema";
 import User from "@/Models/userSchema";
+import Order from "@/Models/orderSchema";
 import getCloudinaryImagePublicId from "@/utils/getCloudinaryImagePublicId";
 import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
@@ -844,6 +845,15 @@ export const getProductsByIds = async (productIds) => {
 };
 
 export const initiatePayment = async (userInfo, cartTotal) => {
+  await dbConnect();
+
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return { success: false, error: "Unauthorized" };
+  }
+
   const store_id = process.env.SSL_COMMERZ_STORE_ID;
   const store_passwd = process.env.SSL_COMMERZ_STORE_PASSWORD;
   const baseUrl = process.env.BASE_URL;
@@ -857,18 +867,90 @@ export const initiatePayment = async (userInfo, cartTotal) => {
     return { success: false, error: "Invalid cart total" };
   }
 
+  const cookiesStore = await cookies();
+  const existingCart = cookiesStore.get("cart");
+  const cart = existingCart?.value ? JSON.parse(existingCart.value) : [];
+  const userCartItems = cart.filter((item) => item.userId === userId);
+
+  if (userCartItems.length === 0) {
+    return { success: false, error: "Cart is empty" };
+  }
+
+  const productIds = Array.from(
+    new Set(userCartItems.map((item) => item.productId)),
+  );
+  const products = await Product.find({ _id: { $in: productIds } }).lean();
+  const productById = products.reduce((acc, product) => {
+    acc[product._id.toString()] = product;
+    return acc;
+  }, {});
+
+  const items = [];
+  let subtotal = 0;
+
+  for (const cartItem of userCartItems) {
+    const product = productById[String(cartItem.productId)];
+    if (!product) {
+      return { success: false, error: "Product not found in cart" };
+    }
+
+    const quantity = Math.max(1, Number(cartItem.quantity) || 1);
+    const unitPrice = Number(product.price) || 0;
+
+    items.push({
+      productId: product._id,
+      shopId: product.shopId || null,
+      productName: product.productName,
+      unitPrice,
+      quantity,
+      image: product.images?.mainImage || "",
+    });
+
+    subtotal += unitPrice * quantity;
+  }
+
+  const shippingFee = subtotal >= 5000 ? 0 : 150;
+  const serviceFee = 50;
+  const totalAmount = subtotal + shippingFee + serviceFee;
+
   // generate a unique transaction ID for each payment attempt
   const tran_id = `REF_${Date.now()}`;
 
+  const orderPayload = {
+    userId,
+    items,
+    shippingAddress: {
+      name: userInfo?.name || "",
+      phone: userInfo?.phone || "",
+      village: userInfo?.address?.village || "",
+      upazila: userInfo?.address?.upazila || "",
+      district: userInfo?.address?.district || "",
+    },
+    subtotal,
+    shippingFee,
+    serviceFee,
+    totalAmount,
+    currency: "BDT",
+    tran_id,
+    paymentStatus: "Pending",
+    orderStatus: "Pending",
+    paymentMethod: "SSLCommerz",
+  };
+
+  const createdOrder = await Order.create(orderPayload);
+  if (!createdOrder) {
+    return { success: false, error: "Failed to create order" };
+  }
+
   const data = {
-    total_amount: cartTotal,
+    total_amount: totalAmount,
     currency: "BDT",
     tran_id: tran_id,
     // set URLs according to your website's domain (for local host it will be like this)
     success_url: `${baseUrl}/api/payment/success?tran_id=${tran_id}`,
-    fail_url: `${baseUrl}/api/payment/fail?tran_id=${tran_id}`,
-    cancel_url: `${baseUrl}/api/payment/cancel?tran_id=${tran_id}`,
-    ipn_url: `${baseUrl}/api/payment/ipn`,
+    fail_url: `${baseUrl}/payment/fail?tran_id=${tran_id}`,
+    cancel_url: `${baseUrl}/payment/cancel?tran_id=${tran_id}`,
+    ipn_url: `${baseUrl}/payment/ipn`,
 
     shipping_method: "Courier",
     product_name: "Cart Products",

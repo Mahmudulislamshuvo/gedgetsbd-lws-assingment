@@ -1,6 +1,7 @@
 "use client";
 
 import { addTocart } from "@/actions";
+import { toast } from "@/utils/toastify";
 
 const AddtoCartBtn = ({ productId, userId }) => {
   const handleAddToCart = async (e) => {
@@ -8,13 +9,13 @@ const AddtoCartBtn = ({ productId, userId }) => {
     try {
       const res = await addTocart(productId, userId);
       if (res.success) {
-        alert("Product added to cart successfully!");
+        toast.success("Product added to cart successfully!");
       } else {
-        alert("Failed to add product to cart.");
+        toast.error(res.error || "Failed to add product to cart.");
       }
     } catch (error) {
       console.log(error);
-      alert("An error occurred while adding the product to the cart.");
+      toast.error("An error occurred while adding the product to the cart.");
     }
   };
 
