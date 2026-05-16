@@ -79,6 +79,7 @@ export const updateProfileData = async (userEmail, updatedData) => {
       email: user.email,
       shopId: user.shopId ? user.shopId.toString() : null,
     };
+    revalidatePath("/payment-process", "/profile");
 
     return {
       success: true,

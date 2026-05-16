@@ -1,58 +1,89 @@
-const RideSideSummery = ({ userInfo }) => {
+"use client";
+
+import { ShieldCheck, Truck } from "lucide-react";
+
+const RideSideSummery = ({ userInfo, cartItems }) => {
+  const productTotalPrice = cartItems
+    ?.map((item) => item.quantity * item.price)
+    .reduce((a, b) => a + b, 0);
+
+  const productTotalItems = cartItems?.reduce(
+    (total, item) => total + item.quantity,
+    0,
+  );
+
+  const grandTotal =
+    productTotalPrice >= 5000
+      ? productTotalPrice + 50
+      : productTotalPrice + 150 + 50;
+
+  let gotoPayment = true;
+
+  if (!userInfo?.address?.district || !userInfo?.phone) {
+    gotoPayment = false;
+  }
+
+  const handleInitiatePaymentProcess = async () => {
+    console.log("hi");
+  };
+
   return (
-    <div class="w-full lg:w-75">
-      <div class="box p-4 sticky top-10">
+    <div className="w-full lg:w-75">
+      <div className="box p-4 sticky top-10">
         <button
-          onclick="document.getElementById('paymentForm').submit()"
-          class="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
+          disabled={gotoPayment === false}
+          onClick={() => handleInitiatePaymentProcess()}
+          className="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
         >
           Place your order
         </button>
-        <p class="text-[10px] text-gray-500 text-center mb-4 border-b border-gray-300 pb-4 leading-tight">
+        <p className="text-[10px] text-gray-500 text-center mb-4 border-b border-gray-300 pb-4 leading-tight">
           By placing your order, you agree to Gadgets BD's
           <a
             href="#"
-            class="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
+            className="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
           >
             privacy notice
           </a>
           and
           <a
             href="#"
-            class="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
+            className="text-amazon-blue text-xs hover:underline hover:text-amazon-orange"
           >
             conditions of use
           </a>
           .
         </p>
 
-        <h3 class="font-bold text-lg mb-4">Order Summary</h3>
-        <div class="space-y-2 text-xs text-gray-600">
-          <div class="flex justify-between">
-            <span>Items (3):</span>
-            <span>৳4,02,000</span>
+        <h3 className="font-bold text-lg mb-4">Order Summary</h3>
+        <div className="space-y-2 text-xs text-gray-600">
+          <div className="flex justify-between">
+            <span>Items ({productTotalItems}):</span>
+            <span>৳{productTotalPrice?.toLocaleString()}</span>
           </div>
-          <div class="flex justify-between">
+          <div className="flex justify-between">
             <span>Delivery Fee:</span>
-            <span class="text-green-600 font-bold">FREE</span>
+            <span className="text-green-600 font-bold">
+              {productTotalPrice >= 5000 ? "FREE" : 150}
+            </span>
           </div>
-          <div class="flex justify-between border-b border-gray-200 pb-2">
+          <div className="flex justify-between border-b border-gray-200 pb-2">
             <span>Service Fee:</span>
-            <span>৳500</span>
+            <span>50</span>
           </div>
-          <div class="flex justify-between text-amazon-orange text-lg font-bold pt-2">
+          <div className="flex justify-between text-amazon-orange text-lg font-bold pt-2">
             <span>Order Total:</span>
-            <span>৳4,02,500</span>
+            <span>৳{grandTotal?.toLocaleString()}</span>
           </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-gray-200 text-xs">
-          <p class="text-green-600 font-bold mb-2">
-            <i data-lucide="truck" class="w-4 h-4 inline mr-1"></i>
+        <div className="mt-4 pt-4 border-t border-gray-200 text-xs">
+          <p className="text-green-600 font-bold mb-2">
+            <Truck className="w-4 h-4 inline mr-1" />
             FREE Delivery on orders over ৳50,000
           </p>
-          <p class="text-gray-600">
-            <i data-lucide="shield-check" class="w-4 h-4 inline mr-1"></i>
+          <p className="text-gray-600">
+            <ShieldCheck className="w-4 h-4 inline mr-1" />
             Secure checkout
           </p>
         </div>

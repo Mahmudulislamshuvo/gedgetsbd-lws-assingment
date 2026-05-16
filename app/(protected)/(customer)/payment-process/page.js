@@ -17,9 +17,9 @@ const PaymentProcessPage = async () => {
   const getUserInfo = await getProfileData(session?.user?.id);
 
   return (
-    <div class="checkout-container flex-1 py-10 px-4 flex flex-col lg:flex-row gap-8">
+    <div className="checkout-container flex-1 py-10 px-4 flex flex-col lg:flex-row gap-8">
       {/* <!-- Left Side: Steps --> */}
-      <div class="flex-1 space-y-6">
+      <div className="flex-1 space-y-6">
         {/* <!-- 1. Shipping Address Summary --> */}
         <ShippingAddress userInfo={getUserInfo?.data} />
 
@@ -31,7 +31,7 @@ const PaymentProcessPage = async () => {
       </div>
 
       {/* <!-- Right Side: Order Summary --> */}
-      <RideSideSummery userInfo={getUserInfo?.data} />
+      <RideSideSummery userInfo={getUserInfo?.data} cartItems={cartItems} />
     </div>
   );
 };
