@@ -1,8 +1,13 @@
 "use client";
 
+import { initiatePayment } from "@/actions";
+import { toast } from "@/utils/toastify";
 import { ShieldCheck, Truck } from "lucide-react";
+import { useState } from "react";
 
 const RideSideSummery = ({ userInfo, cartItems }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const productTotalPrice = cartItems
     ?.map((item) => item.quantity * item.price)
     .reduce((a, b) => a + b, 0);
@@ -24,18 +29,38 @@ const RideSideSummery = ({ userInfo, cartItems }) => {
   }
 
   const handleInitiatePaymentProcess = async () => {
-    console.log("hi");
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await initiatePayment(userInfo, grandTotal);
+      if (response?.redirectUrl) {
+        window.location.href = response.redirectUrl;
+        return;
+      }
+      if (response?.success === false) {
+        toast.error(response.error || "Payment initiation failed");
+      }
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+      toast.error("Payment initiation failed");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="w-full lg:w-75">
       <div className="box p-4 sticky top-10">
         <button
-          disabled={gotoPayment === false}
+          disabled={gotoPayment === false || isSubmitting}
           onClick={() => handleInitiatePaymentProcess()}
           className="w-full py-2 mb-4 rounded-md btn-primary text-sm font-normal shadow-sm"
         >
-          Place your order
+          {isSubmitting ? "Redirecting..." : "Place your order"}
         </button>
         <p className="text-[10px] text-gray-500 text-center mb-4 border-b border-gray-300 pb-4 leading-tight">
           By placing your order, you agree to Gadgets BD's

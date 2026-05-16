@@ -9,6 +9,8 @@ import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
 import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
+import SSLCommerzPayment from "sslcommerz-lts";
+import { redirect } from "next/navigation";
 
 const cloudinaryConfigured = cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -838,5 +840,70 @@ export const getProductsByIds = async (productIds) => {
   } catch (error) {
     console.log(error);
     return { success: false, error: "Something went wrong fetching products" };
+  }
+};
+
+export const initiatePayment = async (userInfo, cartTotal) => {
+  const store_id = process.env.SSL_COMMERZ_STORE_ID;
+  const store_passwd = process.env.SSL_COMMERZ_STORE_PASSWORD;
+  const baseUrl = process.env.BASE_URL;
+  const is_live = false;
+
+  if (!store_id || !store_passwd || !baseUrl) {
+    return { success: false, error: "Missing SSLCommerz configuration" };
+  }
+
+  if (!Number.isFinite(Number(cartTotal)) || Number(cartTotal) <= 0) {
+    return { success: false, error: "Invalid cart total" };
+  }
+
+  // generate a unique transaction ID for each payment attempt
+  const tran_id = `REF_${Date.now()}`;
+
+  const data = {
+    total_amount: cartTotal,
+    currency: "BDT",
+    tran_id: tran_id,
+    // set URLs according to your website's domain (for local host it will be like this)
+    success_url: `${baseUrl}/api/payment/success?tran_id=${tran_id}`,
+    fail_url: `${baseUrl}/api/payment/fail?tran_id=${tran_id}`,
+    cancel_url: `${baseUrl}/api/payment/cancel?tran_id=${tran_id}`,
+    ipn_url: `${baseUrl}/api/payment/ipn`,
+
+    shipping_method: "Courier",
+    product_name: "Cart Products",
+    product_category: "Electronic",
+    product_profile: "general",
+
+    // customer information
+    cus_name: userInfo?.name || "Customer",
+    cus_email: userInfo?.email || "customer@example.com",
+    cus_add1: userInfo?.address?.village || "Dhaka",
+    cus_add2: userInfo?.address?.district || "Dhaka",
+    cus_country: "Bangladesh",
+    cus_phone: userInfo?.phone || "01711111111",
+
+    ship_name: userInfo?.name || "Customer",
+    ship_add1: userInfo?.address?.village,
+    ship_add2: userInfo?.address?.upazila,
+    ship_add3: userInfo?.address?.district,
+    ship_city: userInfo?.address?.district || "Dhaka",
+    ship_postcode: 1244,
+    ship_country: "Bangladesh",
+  };
+
+  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+
+  try {
+    const apiResponse = await sslcz.init(data);
+
+    if (apiResponse?.GatewayPageURL) {
+      return { success: true, redirectUrl: apiResponse.GatewayPageURL };
+    }
+
+    return { success: false, error: "Failed to generate payment link" };
+  } catch (error) {
+    console.error("SSLCommerz Init Error:", error);
+    return { success: false, error: "Payment initiation failed" };
   }
 };
