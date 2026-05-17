@@ -31,6 +31,28 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
+// for pdf
+
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+import InvoiceDownloadSection from "@/components/common/InvoiceDownloadSection";
+
+const payload = {
+company: { name: "Amazon BD", address: "Dhaka", phone: "+880 1XX", email: "support@..." },
+currencySymbol: "BDT ",
+invoice: { id: "INV-001", transactionId: "REF_123", date: "5/17/2026", status: "Paid", paymentMethod: "SSLCommerz" },
+customer: { name: "Shuvo", address: "Gulshan, Dhaka", phone: "01XXXXXXXXX", email: "customer@email.com" },
+items: [{ name: "Product", sku: "SKU-01", qty: 1, unitPrice: 500, total: 500 }],
+summary: { subtotal: 500, shipping: 50, tax: 0, discount: 0, total: 550 },
+summaryRows: [
+{ label: "Subtotal", value: 500 },
+{ label: "Shipping", value: 50 },
+],
+};
+
+<InvoiceDownloadSection
+  payload={payload}
+  fileName="invoice-001.pdf"
+/>
